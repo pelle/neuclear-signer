@@ -54,10 +54,6 @@ public class AddIdentityDialog extends ProcessDialog {
 //        categories.addActionListener(okAction);
     }
 
-    public AddIdentityDialog(Frame frame) {
-        this(frame, "newcontact");
-    }
-
     protected boolean validateForm() {
         return (url.getText().length() > 0) && (categories.getSelectedItem() != null);
     }

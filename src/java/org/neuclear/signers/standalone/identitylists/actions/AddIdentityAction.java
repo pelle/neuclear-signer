@@ -48,7 +48,7 @@ public class AddIdentityAction extends NeuClearAction {
 
     public void actionPerformed(ActionEvent event) {
         if (dia == null)
-            dia = new AddIdentityDialog(frame);
+            dia = new AddIdentityDialog(frame, name);
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -63,7 +63,7 @@ public class AddIdentityAction extends NeuClearAction {
 
     public void webAddContact(String webAdd) throws UserCancellationException {
         if (dia == null)
-            dia = new AddIdentityDialog(frame);
+            dia = new AddIdentityDialog(frame, name);
         dia.addContact(tree, webAdd);
     }
 
