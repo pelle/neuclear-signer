@@ -53,10 +53,22 @@ public class AssetPanel extends IdentityPanel {
     }
 
     protected AddIdentityAction createAddAction() {
-        return new AddIdentityAction((IdentityListModel) tree.getModel(), "addasset", IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset_new.png"));
+        return new AddIdentityAction(tree, "addasset", IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset_new.png"));
     }
 
     protected RemoveIdentityAction createRemoveAction() {
         return new RemoveIdentityAction(tree, "removeasset", IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset_remove.png"));
+    }
+
+    protected void addDefaults() {
+        IdentityListModel model = (IdentityListModel) tree.getModel();
+        model.addCategory("Money");
+        model.addCategory("Financial");
+        model.addCategory("Telecom");
+        model.addCategory("Entertainment");
+        model.addCategory("Manufactured Goods");
+        model.addCategory("Services");
+        model.addCategory("Misc");
+
     }
 }

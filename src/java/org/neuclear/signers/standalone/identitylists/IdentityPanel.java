@@ -50,6 +50,9 @@ public class IdentityPanel extends JPanel {
         toolbar.setFloatable(true);
         toolbar.setRollover(true);
 
+        if (tree.getModel().getChildCount(tree.getModel().getRoot()) == 0)
+            addDefaults();
+        expandTree();
         addContact = createAddAction();
         final JButton addButton = new JButton(addContact);
         addButton.setText(null);
@@ -63,17 +66,21 @@ public class IdentityPanel extends JPanel {
 
         toolbar.add(removeButton);
         add(toolbar, BorderLayout.NORTH);
-        JPanel content = new JPanel();
-        content.setLayout(new BorderLayout());
-        add(content, BorderLayout.CENTER);
-        content.add(new JScrollPane(tree), BorderLayout.NORTH);
+        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        add(split, BorderLayout.CENTER);
+        final JScrollPane treeScroll = new JScrollPane(tree);
+        final Dimension min = new Dimension(100, 100);
+        treeScroll.setMinimumSize(min);
+        treeScroll.setPreferredSize(new Dimension(100, 200));
+        split.setTopComponent(treeScroll);
 
         preview = new JEditorPane("text/html", "");
         preview.setEditable(false);
         final JScrollPane scroll = new JScrollPane(preview);
-        scroll.setSize(300, 0);
-        content.add(scroll, BorderLayout.SOUTH);
-        preview.setVisible(false);
+        scroll.setAutoscrolls(true);
+        scroll.setMinimumSize(min);
+        split.setBottomComponent(scroll);
+        preview.setVisible(true);
         preview.addHyperlinkListener(new HyperlinkListener() {
             /**
              * Called when a hypertext link is updated.
@@ -106,16 +113,15 @@ public class IdentityPanel extends JPanel {
                 if (selected != null && selected instanceof IdentityNode) {
                     try {
                         preview.setText(((IdentityNode) selected).getIdentity().getEncoded());
-                        scroll.setSize(300, 200);
-
                         preview.setVisible(true);
+                        scroll.scrollRectToVisible(new Rectangle(0, 0, scroll.getWidth(), scroll.getHeight()));
                     } catch (NameResolutionException e1) {
                         e1.printStackTrace();
                     } catch (InvalidNamedObjectException e1) {
                         e1.printStackTrace();
                     }
                 } else {
-                    preview.setVisible(false);
+                    preview.setText("<b>Select an item above</b>");
                 }
 
             }
@@ -123,32 +129,26 @@ public class IdentityPanel extends JPanel {
         });
     }
 
+    protected void addDefaults() {
+        IdentityListModel model = (IdentityListModel) tree.getModel();
+        model.addCategory("Friends");
+        model.addCategory("Family");
+        model.addCategory("Business");
+        model.addCategory("Projects");
+        model.addCategory("Misc");
+
+    }
+
     protected RemoveIdentityAction createRemoveAction() {
         return new RemoveIdentityAction(tree);
     }
 
     protected AddIdentityAction createAddAction() {
-        return new AddIdentityAction((IdentityListModel) tree.getModel());
+        return new AddIdentityAction(tree);
     }
 
     public IdentityPanel() {
         this("Identities");
-        IdentityListModel model = (IdentityListModel) tree.getModel();
-//        model.addCategory("Friends");
-//        try {
-//            model.addIdentity("NeuClear Developers", Resolver.resolveIdentity("http://talk.org/pelletest.html"));
-//            model.addIdentity("Friends", Resolver.resolveIdentity("http://ao.com.au/iangreen_sig.html"));
-        expandTree();
-
-//        } catch (NameResolutionException e) {
-//            e.printStackTrace();
-//        } catch (InvalidNamedObjectException e) {
-//            e.printStackTrace();
-//        }
-//        model.addCategory("Business");
-//        model.addCategory("Family");
-//        model.addCategory("Misc");
-
     }
 
     public Action[] getActions() {

@@ -1,6 +1,6 @@
 package org.neuclear.signers.standalone.identitylists.actions;
 
-import org.neuclear.commons.Utility;
+import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.commons.crypto.passphraseagents.swing.actions.NeuClearAction;
 import org.neuclear.id.Identity;
@@ -39,21 +39,46 @@ import java.awt.event.KeyEvent;
  * Time: 1:44:07 PM
  */
 public class AddIdentityAction extends NeuClearAction implements Runnable {
-    public AddIdentityAction(IdentityListModel model) {
-        this(model, "addcontact", IconTools.loadIcon(AddIdentityAction.class, "org/neuclear/signers/standalone/icons/contact_new.png"));
+    public AddIdentityAction(JTree tree) {
+        this(tree, "addcontact", IconTools.loadIcon(AddIdentityAction.class, "org/neuclear/signers/standalone/icons/contact_new.png"));
+        this.frame = null;
     }
 
-    public AddIdentityAction(IdentityListModel model, String name, Icon icon) {
+    public AddIdentityAction(JTree tree, String name, Icon icon) {
         super(name, icon);
-        this.model = model;
+        this.tree = tree;
         putValue(SHORT_DESCRIPTION, caps.getString(name));
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
     }
 
     public void actionPerformed(ActionEvent event) {
+        if (dia == null)
+            dia = new AddIdentityDialog(frame);
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    dia.addContact(tree);
+                } catch (UserCancellationException e) {
+                    ;
+                }
+
+            }
+        }).start();
+        /* if (tree.getSelectionPath()!=null){
+            MutableTreeNode node = (MutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+            if (node instanceof IdentityNode){
+                category=((DefaultMutableTreeNode)node.getParent()).getUserObject().toString();
+            } else if ((node instanceof DefaultMutableTreeNode)&&!node.equals(tree.getModel().getRoot())){
+                category=((DefaultMutableTreeNode)node).getUserObject().toString();
+            } else {
+                category="Misc";
+            }
+        } else {
+            category="Misc";
+        }
         url = JOptionPane.showInputDialog("Enter the url:");
         if (!Utility.isEmpty(url))
-            new Thread(this).start();
+            new Thread(this).start();*/
     }
 
     /**
@@ -70,7 +95,7 @@ public class AddIdentityAction extends NeuClearAction implements Runnable {
     public void run() {
         try {
             Identity id = Resolver.resolveIdentity(url);
-            model.addIdentity(id);
+            ((IdentityListModel) tree.getModel()).addIdentity(category, id);
 
         } catch (NameResolutionException e) {
             e.printStackTrace();
@@ -80,6 +105,9 @@ public class AddIdentityAction extends NeuClearAction implements Runnable {
 
     }
 
-    private final IdentityListModel model;
     private String url;
+    private String category;
+    private final JTree tree;
+    private AddIdentityDialog dia;
+    private JFrame frame;
 }
