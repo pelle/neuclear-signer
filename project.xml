@@ -26,7 +26,7 @@
         </url>
     </repository>
 
-    <siteAddress>neuclear.org/signer/</siteAddress>
+    <siteAddress>neuclear.org</siteAddress>
     <siteDirectory>/home/sites/neuclear.org/public_html/signer/</siteDirectory>
     <issueTrackingUrl>http://jira.neuclear.org:9090/</issueTrackingUrl>
     <mailingLists>
@@ -121,7 +121,22 @@
         </dependency>
     </dependencies>
     <build>
+        <!--    <sourceDirectories>-->
         <sourceDirectory>src/java</sourceDirectory>
+        <!--    </sourceDirectories>-->
+
+        <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+
+        <!-- Unit test cases -->
+        <unitTest>
+            <includes>
+                <!--<include>**/*Test.java</include>-->
+            </includes>
+            <excludes>
+                <exclude>**/Abstract*Test.java</exclude>
+            </excludes>
+        </unitTest>
+
     </build>
 </project>
 
