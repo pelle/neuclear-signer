@@ -69,11 +69,6 @@ public class MainFrame extends JFrame {
         Container content = getContentPane();
         content.setLayout(new BorderLayout());
         JTaskPane taskpane = new JTaskPane();
-        JTaskPaneGroup signingTasks = new JTaskPaneGroup();
-        signingTasks.setIcon(IconTools.getSign());
-        signingTasks.setText("Signing tasks");
-        signingTasks.setEnabled(true);
-        taskpane.add(signingTasks);
 
         JTaskPaneGroup personalityTasks = new JTaskPaneGroup();
         personalityTasks.setIcon(IconTools.getPersonalities());
@@ -125,6 +120,11 @@ public class MainFrame extends JFrame {
             assetTasks.add(action);
         }
 
+        JTaskPaneGroup signingTasks = new JTaskPaneGroup();
+        signingTasks.setIcon(IconTools.getSign());
+        signingTasks.setText("Signing tasks");
+        signingTasks.setEnabled(true);
+        taskpane.add(signingTasks);
 
         MessageLabel message = new MessageLabel();
         content.add(message, BorderLayout.SOUTH);
@@ -191,9 +191,10 @@ public class MainFrame extends JFrame {
 
         });
 
-        UIUtilities.centerOnScreen(this);
         setSize(300, 500);
+        UIUtilities.centerOnScreen(this);
         show();
+        setEnabled(false);
         CryptoTools.ensureProvider();
         server = new SigningServer(signer, message);
         server.start();
@@ -208,6 +209,7 @@ public class MainFrame extends JFrame {
 
             }
         }
+        setEnabled(true);
 
     }
 

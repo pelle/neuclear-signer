@@ -1,18 +1,17 @@
 package org.neuclear.signers.standalone.identitylists;
 
+import com.thoughtworks.xstream.XStream;
 import org.neuclear.id.Identity;
 
 import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
+import javax.swing.event.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
 
 /*
@@ -43,6 +42,7 @@ import java.util.HashMap;
 public class IdentityListModel extends DefaultTreeModel implements ComboBoxModel {
     public IdentityListModel(String title, File file) {
         super(new DefaultMutableTreeNode(title));
+        this.listenerList = new XSSafeEventListenerList(); //XStream doesnt initialize the ListenerList correctly
         this.title = title;
         list = new ArrayList();
         categories = new HashMap();
@@ -93,6 +93,17 @@ public class IdentityListModel extends DefaultTreeModel implements ComboBoxModel
         fireListUpdated();
 //        save();
         return node;
+    }
+
+    /**
+     * Adds a listener for the TreeModelEvent posted after the tree changes.
+     *
+     * @param l the listener to add
+     * @see #removeTreeModelListener
+     */
+    public void addTreeModelListener(TreeModelListener l) {
+        super.addTreeModelListener(l);
+        save();
     }
 
     public void addIdentity(Identity id) {
@@ -162,12 +173,11 @@ public class IdentityListModel extends DefaultTreeModel implements ComboBoxModel
         selected = o;
     }
 
-    private void save() {
+    private synchronized void save() {
         try {
             System.out.println("Saving");
-            ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-            os.writeObject(this);
-            os.close();
+            XStream xs = new XStream();
+            xs.toXML(this, new BufferedWriter(new FileWriter(file)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -178,17 +188,14 @@ public class IdentityListModel extends DefaultTreeModel implements ComboBoxModel
     }
 
     public static IdentityListModel getModel(String title) {
-        File file = new File(System.getProperty("user.home") + "/.neuclear/ui/" + title + ".ser");
+        File file = new File(System.getProperty("user.home") + "/.neuclear/ui/" + title + ".xml");
         if (file.exists()) {
             try {
-                ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
-                IdentityListModel model = (IdentityListModel) in.readObject();
-                in.close();
+                XStream xs = new XStream();
+                IdentityListModel model = (IdentityListModel) xs.fromXML(new BufferedReader(new FileReader(file)));
                 model.setFile(file);
                 return model;
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -202,4 +209,45 @@ public class IdentityListModel extends DefaultTreeModel implements ComboBoxModel
     private ArrayList list;
     private String title;
 
+    public static class XSSafeEventListenerList extends EventListenerList {
+        public XSSafeEventListenerList() {
+//            if (listenerList==null)
+//                listenerList=new Object[0];
+        }
+
+        /**
+         * Adds the listener as a listener of the specified type.
+         *
+         * @param t the type of the listener to be added
+         * @param l the listener to be added
+         */
+        public synchronized void add(Class t, EventListener l) {
+            if (l == null) {
+                // In an ideal world, we would do an assertion here
+                // to help developers know they are probably doing
+                // something wrong
+                return;
+            }
+            if (!t.isInstance(l)) {
+                throw new IllegalArgumentException("Listener " + l +
+                        " is not of type " + t);
+            }
+            if (listenerList == null || listenerList.length == 0) {
+                // if this is the first listener added,
+                // initialize the lists
+                listenerList = new Object[]{t, l};
+            } else {
+                // Otherwise copy the array and add the new listener
+                int i = listenerList.length;
+                Object[] tmp = new Object[i + 2];
+                System.arraycopy(listenerList, 0, tmp, 0, i);
+
+                tmp[i] = t;
+                tmp[i + 1] = l;
+
+                listenerList = tmp;
+            }
+
+        }
+    }
 }
