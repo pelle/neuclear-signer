@@ -19,10 +19,10 @@
     <url>http://dev.neuclear.org/signer/</url>
     <repository>
         <connection>
-         scm:cvs:pserver:anonymous@cvs.neuclear.sourceforge.net:/cvsroot/neuclear:neuclear-signer
+         scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/neuclear:neuclear-signer
         </connection>
         <url>
-      http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/neuclear/neuclear-signer/
+      http://cvs.sourceforge.net/viewcvs.py/neuclear/neuclear-signer/
         </url>
     </repository>
 
