@@ -197,7 +197,7 @@ public class MainFrame extends JFrame {
         JMenu directory = new JMenu("Directory");
         directory.setMnemonic(KeyEvent.VK_D);
         directory.add(createWebMenuItem("Search Yellow Pages", "http://pkyp.org", message));
-        directory.add(createWebMenuItem("Submit Page to Yellow Pages", "http://pkyp.org/submit.jsp", message));
+//        directory.add(createWebMenuItem("Submit Page to Yellow Pages", "http://pkyp.org/submit.jsp", message));
 
         menubar.add(directory);
 
