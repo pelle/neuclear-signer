@@ -2,8 +2,10 @@ package org.neuclear.signers.standalone.identitylists;
 
 import com.jgoodies.plaf.HeaderStyle;
 import com.jgoodies.plaf.Options;
+import org.neuclear.id.Identity;
 import org.neuclear.id.InvalidNamedObjectException;
 import org.neuclear.id.NameResolutionException;
+import org.neuclear.id.resolver.Resolver;
 import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
 import org.neuclear.signers.standalone.identitylists.actions.RemoveIdentityAction;
 
@@ -14,6 +16,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 
@@ -57,13 +60,13 @@ public class IdentityPanel extends JPanel {
         expandTree();
         addContact = createAddAction();
         final JButton addButton = new JButton(addContact);
-        addButton.setText(null);
+//        addButton.setText(null);
         addButton.putClientProperty(Options.IS_NARROW_KEY, Boolean.TRUE);
 
         toolbar.add(addButton);
         removeContact = createRemoveAction();
         final JButton removeButton = new JButton(removeContact);
-        removeButton.setText(null);
+//        removeButton.setText(null);
         removeButton.putClientProperty(Options.IS_NARROW_KEY, Boolean.TRUE);
 
         toolbar.add(removeButton);
@@ -143,7 +146,14 @@ public class IdentityPanel extends JPanel {
 
     protected void addDefaults() {
         IdentityTreeModel model = (IdentityTreeModel) tree.getModel();
-        model.addCategory("Friends");
+        final DefaultMutableTreeNode friends = model.addCategory("Friends");
+        try {
+            model.addIdentity(friends, (Identity) Resolver.resolve("http://talk.org/pelletest.html"));
+        } catch (NameResolutionException e) {
+            e.printStackTrace();
+        } catch (InvalidNamedObjectException e) {
+            e.printStackTrace();
+        }
         model.addCategory("Family");
         model.addCategory("Business");
         model.addCategory("Projects");

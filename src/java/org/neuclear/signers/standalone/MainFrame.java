@@ -201,7 +201,6 @@ public class MainFrame extends JFrame {
 
         });
 
-        setSize(300, 500);
         placeWindow();
         show();
         setEnabled(false);
@@ -228,6 +227,7 @@ public class MainFrame extends JFrame {
 
     private void placeWindow() {
         Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(300, (screenDim.getHeight() < 400 ? (int) screenDim.getHeight() : 400));
         setLocation((screenDim.width - getWidth() - 10),
                 (screenDim.height - getHeight()) - 25);
     }

@@ -1,10 +1,15 @@
 package org.neuclear.signers.standalone.identitylists;
 
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
+import org.neuclear.id.Identity;
+import org.neuclear.id.InvalidNamedObjectException;
+import org.neuclear.id.NameResolutionException;
+import org.neuclear.id.resolver.Resolver;
 import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
 import org.neuclear.signers.standalone.identitylists.actions.RemoveIdentityAction;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /*
  *  The NeuClear Project and it's libraries are
@@ -64,7 +69,15 @@ public class AssetPanel extends IdentityPanel {
 
     protected void addDefaults() {
         IdentityTreeModel model = (IdentityTreeModel) tree.getModel();
-        model.addCategory("Money");
+        DefaultMutableTreeNode money = model.addCategory("Money");
+        try {
+            model.addIdentity(money, (Identity) Resolver.resolve("http://bux.neuclear.org/bux.html"));
+        } catch (NameResolutionException e) {
+            e.printStackTrace();
+        } catch (InvalidNamedObjectException e) {
+            e.printStackTrace();
+        }
+
         model.addCategory("Financial");
         model.addCategory("Telecom");
         model.addCategory("Entertainment");
