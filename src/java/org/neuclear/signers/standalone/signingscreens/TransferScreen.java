@@ -16,6 +16,7 @@ import org.neuclear.commons.crypto.signers.BrowsableSigner;
 import org.neuclear.commons.swing.LongChildProcess;
 import org.neuclear.commons.swing.Messages;
 import org.neuclear.commons.swing.ProcessDialog;
+import org.neuclear.id.Identity;
 import org.neuclear.id.InvalidNamedObjectException;
 import org.neuclear.id.NameResolutionException;
 import org.neuclear.id.builders.Builder;
@@ -133,8 +134,10 @@ public class TransferScreen extends ProcessDialog {
 
                     final Asset asset = (Asset) ((IdentityNode) assets.getSelectedItem()).getIdentity();
                     processInfo("Creating Transfer Order");
+                    final Identity recipient = ((IdentityNode) contacts.getSelectedItem()).getIdentity();
                     Builder builder = new TransferOrderBuilder(asset,
-                            ((IdentityNode) contacts.getSelectedItem()).getIdentity().getSignatory(),
+                            recipient.getSignatory(),
+                            recipient.getURL(),
                             new Amount(Double.parseDouble(amount.getText())),
                             comment.getText());
                     processInfo("Signing Transfer Order");

@@ -65,6 +65,7 @@ public class AddIdentityAction extends NeuClearAction {
     public void webAddContact(String webAdd) throws UserCancellationException {
         if (dia == null)
             dia = new AddIdentityDialog(frame, name);
+        frame.toFront();
         dia.addContact(tree, webAdd);
     }
 

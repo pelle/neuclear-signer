@@ -72,6 +72,7 @@ public class AssetPanel extends IdentityPanel {
         DefaultMutableTreeNode money = model.addCategory("Money");
         try {
             model.addIdentity(money, (Identity) Resolver.resolve("http://bux.neuclear.org/bux.html"));
+            model.addIdentity(money, (Identity) Resolver.resolve("http://beta.veraxpay.com/rules.html"));
         } catch (NameResolutionException e) {
             e.printStackTrace();
         } catch (InvalidNamedObjectException e) {
