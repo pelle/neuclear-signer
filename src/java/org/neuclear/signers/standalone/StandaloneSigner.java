@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.prefs.Preferences;
 
 
 /**
@@ -86,7 +87,7 @@ public class StandaloneSigner {
         } catch (Exception e) {
             // Likely PlasticXP is not in the class path; ignore.
         }
-        final JFrame frame = new JFrame("NeuClear Signing Agent");
+        final JFrame frame = new JFrame("NeuClear Personal Signer");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 //        JButton quit = new JButton("Shut down");
 
@@ -150,6 +151,7 @@ public class StandaloneSigner {
                 return "XML Files";
             }
         });
+
         signItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 SignDocument sign = new SignDocument(signer, chooser, frame, message);
@@ -167,6 +169,8 @@ public class StandaloneSigner {
         help.addSeparator();
         help.add(createWebMenuItem("Road Map", "http://jira.neuclear.org/secure/BrowseProject.jspa?id=10030&report=roadmap", message));
         help.add(createWebMenuItem("Report Bug or Suggest Feature", "http://jira.neuclear.org/secure/CreateIssue!default.jspa", message));
+        help.addSeparator();
+        help.add(createWebMenuItem("Developers Blog", "http://talk.org", message));
         help.addSeparator();
         JMenuItem about = new JMenuItem("About");
         about.setMnemonic(KeyEvent.VK_A);
@@ -188,6 +192,7 @@ public class StandaloneSigner {
     }
 
     private final static Icon webicon = IconTools.loadIcon(StandaloneSigner.class, "org/neuclear/signers/standalone/icons/browser.png");
+    private final static Preferences prefs = Preferences.userNodeForPackage(StandaloneSigner.class);
 
     private static JMenuItem createWebMenuItem(final String title, final String url, final MessageLabel message) {
         final JMenuItem item = new JMenuItem(title);
@@ -222,6 +227,7 @@ public class StandaloneSigner {
         public void run() {
             frame.setEnabled(false);
             chooser.setDialogTitle("Select XML file to sign...");
+            chooser.setCurrentDirectory(new File(prefs.get("LASTDIR", System.getProperty("user.home"))));
             int result = chooser.showOpenDialog(frame);
             if (result == JFileChooser.CANCEL_OPTION) {
                 frame.setEnabled(true);
@@ -229,6 +235,7 @@ public class StandaloneSigner {
                 return;
             }
             try {
+                prefs.put("LASTDIR", chooser.getSelectedFile().getParent());
                 message.info("Parsing " + chooser.getSelectedFile().getName());
                 final File file = chooser.getSelectedFile();
                 Document doc;
@@ -242,6 +249,10 @@ public class StandaloneSigner {
                     message.info("Signing " + chooser.getSelectedFile().getName());
                     new EnvelopedSignature(signer, doc.getRootElement());
                 }
+                final String path = chooser.getSelectedFile().getAbsolutePath();
+                final int i = path.lastIndexOf(".");
+                String suggested = path.substring(0, i) + "_sig" + path.substring(i);
+                chooser.setSelectedFile(new File(suggested));
                 chooser.setDialogTitle("Save signed XML Document");
                 result = chooser.showSaveDialog(frame);
                 if (result == JFileChooser.CANCEL_OPTION) {
@@ -249,11 +260,12 @@ public class StandaloneSigner {
                     message.info("Cancelled");
                     return;
                 }
+                prefs.put("LASTDIR", chooser.getSelectedFile().getParent());
                 message.info("Saving " + chooser.getSelectedFile().getName());
                 XMLTools.writeFile(chooser.getSelectedFile(), doc);
                 message.info("Saved signed XML document " + chooser.getSelectedFile().getName());
                 frame.setEnabled(true);
-
+                prefs.flush();
             } catch (Exception e) {
                 frame.setEnabled(true);
                 message.error(e);
@@ -265,7 +277,7 @@ public class StandaloneSigner {
         private final JFileChooser chooser;
         private final JFrame frame;
         private final MessageLabel message;
-        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.12 2004/04/22 14:41:29 pelle Exp $";
+        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.13 2004/04/22 23:59:36 pelle Exp $";
 
     }
 }
