@@ -24,14 +24,13 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import org.neuclear.asset.orders.TransferGlobals;
-import org.neuclear.asset.orders.TransferReceipt;
 import org.neuclear.commons.NeuClearException;
-import org.neuclear.commons.crypto.passphraseagents.AgentMessages;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.signers.PersonalSigner;
 import org.neuclear.commons.swing.LongChildProcess;
 import org.neuclear.commons.swing.ProcessDialog;
 import org.neuclear.id.Identity;
+import org.neuclear.id.senders.Sender;
 import org.neuclear.signers.standalone.identitylists.IdentityPanel;
 
 import javax.swing.*;
@@ -63,15 +62,6 @@ public class PublishAccountScreen extends ProcessDialog {
         CellConstraints cc = new CellConstraints();
 
         builder.setDefaultDialogBorder();
-        builder.addLabel(AgentMessages.getText("asset"), cc.xy(1, 1)).setLabelFor(assets);
-        builder.add(assets, cc.xyw(3, 1, 3));
-        builder.addLabel(AgentMessages.getText("payee"), cc.xy(1, 3)).setLabelFor(contacts);
-        builder.add(contacts, cc.xyw(3, 3, 3));
-        builder.addLabel(AgentMessages.getText("amount"), cc.xy(1, 5)).setLabelFor(amount);
-        builder.add(amount, cc.xy(3, 5));
-        units = builder.addLabel("units", cc.xy(5, 5));
-        builder.addLabel(AgentMessages.getText("comment"), cc.xyw(1, 7, 5)).setLabelFor(comment);
-        builder.add(comment, cc.xyw(1, 9, 5));
         return builder.getPanel();
     }
 
@@ -83,8 +73,8 @@ public class PublishAccountScreen extends ProcessDialog {
                 try {
                     Identity id = (Identity) builder.convert(signer);
                     System.out.println("Sending");
-                    TransferReceipt receipt = (TransferReceipt) asset.service(order);
-                    setResult(receipt);
+                    Sender.quickSend("http://pkyp.org/Post", id);
+                    setResult(id);
                 } catch (NeuClearException e) {
                     e.printStackTrace();
                     parent.error("Server Error");

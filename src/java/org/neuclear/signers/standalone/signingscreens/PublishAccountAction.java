@@ -53,7 +53,7 @@ public class PublishAccountAction extends SignerAction {
                 inTransaction = true;
                 try {
                     if (dia == null) {
-                        dia = new PublishAccountScreen(frame, (PersonalSigner) signer, ICON);
+//                        dia = new PublishAccountScreen(frame, (PersonalSigner) signer, ICON);
                     }
                     dia.openPublishScreen();
                 } catch (UserCancellationException e1) {
