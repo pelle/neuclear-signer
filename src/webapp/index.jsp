@@ -4,7 +4,7 @@
                  org.neuclear.id.NSTools,
                  org.neuclear.commons.servlets.ServletTools        ,
                  org.neuclear.id.Identity,
-                 org.neuclear.id.resolver.NSResolver"%>
+                 org.neuclear.id.resolver.Resolver"%>
  <%
     response.setHeader("Pragma","no-cache");
     response.setDateHeader("Expires",0);
