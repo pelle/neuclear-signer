@@ -2,10 +2,18 @@ package org.neuclear.signers.standalone.identitylists;
 
 import com.jgoodies.plaf.HeaderStyle;
 import com.jgoodies.plaf.Options;
+import org.neuclear.id.InvalidNamedObjectException;
+import org.neuclear.id.NameResolutionException;
 import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
 import org.neuclear.signers.standalone.identitylists.actions.RemoveIdentityAction;
 
+import javax.jnlp.BasicService;
+import javax.jnlp.ServiceManager;
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import java.awt.*;
 
 /*
@@ -55,8 +63,64 @@ public class IdentityPanel extends JPanel {
 
         toolbar.add(removeButton);
         add(toolbar, BorderLayout.NORTH);
-        add(new JScrollPane(tree), BorderLayout.CENTER);
-        add(new JComboBox((ComboBoxModel) tree.getModel()), BorderLayout.SOUTH);
+        JPanel content = new JPanel();
+        content.setLayout(new BorderLayout());
+        add(content, BorderLayout.CENTER);
+        content.add(new JScrollPane(tree), BorderLayout.NORTH);
+
+        preview = new JEditorPane("text/html", "");
+        preview.setEditable(false);
+        final JScrollPane scroll = new JScrollPane(preview);
+        scroll.setSize(300, 0);
+        content.add(scroll, BorderLayout.SOUTH);
+        preview.setVisible(false);
+        preview.addHyperlinkListener(new HyperlinkListener() {
+            /**
+             * Called when a hypertext link is updated.
+             *
+             * @param e the event responsible for the update
+             */
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    try {
+                        BasicService bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
+                        // Invoke the showDocument method
+                        bs.showDocument(e.getURL());
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+
+            }
+        });
+
+
+        tree.addTreeSelectionListener(new TreeSelectionListener() {
+            /**
+             * Called whenever the value of the selection changes.
+             *
+             * @param e the event that characterizes the change.
+             */
+            public void valueChanged(TreeSelectionEvent e) {
+                Object selected = e.getPath().getLastPathComponent();
+                if (selected != null && selected instanceof IdentityNode) {
+                    try {
+                        preview.setText(((IdentityNode) selected).getIdentity().getEncoded());
+                        scroll.setSize(300, 200);
+
+                        preview.setVisible(true);
+                    } catch (NameResolutionException e1) {
+                        e1.printStackTrace();
+                    } catch (InvalidNamedObjectException e1) {
+                        e1.printStackTrace();
+                    }
+                } else {
+                    preview.setVisible(false);
+                }
+
+            }
+
+        });
     }
 
     protected RemoveIdentityAction createRemoveAction() {
@@ -100,4 +164,5 @@ public class IdentityPanel extends JPanel {
     protected final IdentityTree tree;
     private AddIdentityAction addContact;
     private RemoveIdentityAction removeContact;
+    private JEditorPane preview;
 }

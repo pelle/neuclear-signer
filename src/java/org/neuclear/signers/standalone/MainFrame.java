@@ -3,7 +3,8 @@ package org.neuclear.signers.standalone;
 import com.jgoodies.plaf.Options;
 import com.l2fprod.common.swing.JTaskPane;
 import com.l2fprod.common.swing.JTaskPaneGroup;
-import com.l2fprod.common.swing.UIUtilities;
+import com.l2fprod.common.swing.StatusBar;
+import com.l2fprod.common.util.OS;
 import org.neuclear.asset.contracts.AssetGlobals;
 import org.neuclear.commons.crypto.CryptoTools;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
@@ -49,19 +50,22 @@ import java.net.URL;
  * Time: 9:23:30 AM
  */
 public class MainFrame extends JFrame {
-    public MainFrame() {
-        System.setProperty("com.apple.macos.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "NeuClear Trader");
+    public MainFrame(Frame splash) {
         try {
 
-            if (!UIManager.getSystemLookAndFeelClassName().equals("apple.laf.AquaLookAndFeel")) {
+            if (OS.isMacOSX()) {
+                System.setProperty("com.apple.macos.useScreenMenuBar", "true");
+                System.setProperty("com.apple.mrj.application.apple.menu.about.name", "NeuClear Personal Signer");
+            } else if (OS.isWindows2003() || OS.isWindowsXP()) {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } else {
                 UIManager.setLookAndFeel("com.jgoodies.plaf.plastic.PlasticXPLookAndFeel");
                 UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
             }
         } catch (Exception e) {
             // Likely PlasticXP is not in the class path; ignore.
         }
-        setTitle("NeuClear Trader");
+        setTitle("NeuClear Personal Signer");
         AssetGlobals.registerReaders();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setIconImage(IconTools.getLogo().getImage());
@@ -126,8 +130,11 @@ public class MainFrame extends JFrame {
         signingTasks.setEnabled(true);
         taskpane.add(signingTasks);
 
+        StatusBar status = new StatusBar();
+
         MessageLabel message = new MessageLabel();
-        content.add(message, BorderLayout.SOUTH);
+        status.addZone("messages", message, "90%");
+        content.add(status, BorderLayout.SOUTH);
 
         JMenuBar menubar = new JMenuBar();
         setJMenuBar(menubar);
@@ -192,12 +199,15 @@ public class MainFrame extends JFrame {
         });
 
         setSize(300, 500);
-        UIUtilities.centerOnScreen(this);
+        placeWindow();
         show();
         setEnabled(false);
         CryptoTools.ensureProvider();
         server = new SigningServer(signer, message);
         server.start();
+        if (splash != null)
+            splash.dispose();
+        toFront();
         while (!signer.isOpen()) {
             try {
                 signer.open();
@@ -211,6 +221,12 @@ public class MainFrame extends JFrame {
         }
         setEnabled(true);
 
+    }
+
+    private void placeWindow() {
+        Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation((screenDim.width - getWidth() - 10),
+                (screenDim.height - getHeight()) - 25);
     }
 
     private void createWebMenuItem(final String title, final String url, final MessageLabel message) {
@@ -236,7 +252,7 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String args[]) {
-        final MainFrame main = new MainFrame();
+        final MainFrame main = new MainFrame(null);
     }
 
     private final SigningServer server;

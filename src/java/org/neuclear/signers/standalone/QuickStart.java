@@ -11,11 +11,9 @@ public class QuickStart {
     public static void main(String args[]) {
         Frame splash = SplashWindow.splash(Toolkit.getDefaultToolkit().createImage(QuickStart.class.getClassLoader().getResource("neuclearsplash.jpg")));
         try {
-            Class.forName("org.neuclear.signers.standalone.StandaloneSigner")
-                    .getMethod("main", new Class[]{String[].class})
-
-
-                    .invoke(null, new Object[]{args});
+            Class.forName("org.neuclear.signers.standalone.MainFrame")
+                    .getConstructor(new Class[]{Frame.class})
+                    .newInstance(new Frame[]{splash});
         } catch (Throwable e) {
             e.printStackTrace();
 
