@@ -7,6 +7,7 @@ import com.l2fprod.common.swing.StatusBar;
 import com.l2fprod.common.util.OS;
 import org.neuclear.asset.contracts.AssetGlobals;
 import org.neuclear.commons.crypto.CryptoTools;
+import org.neuclear.commons.crypto.passphraseagents.AgentMessages;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.commons.crypto.passphraseagents.swing.KeyStorePanel;
@@ -77,7 +78,7 @@ public class MainFrame extends JFrame {
 
         JTaskPaneGroup personalityTasks = new JTaskPaneGroup();
         personalityTasks.setIcon(IconTools.getPersonalities());
-        personalityTasks.setText("Personality related tasks");
+        personalityTasks.setText("Account related tasks");
         personalityTasks.setEnabled(true);
         taskpane.add(personalityTasks);
 
@@ -94,14 +95,14 @@ public class MainFrame extends JFrame {
 
         JTabbedPane tabbed = new JTabbedPane();
         content.add(tabbed, BorderLayout.CENTER);
-        tabbed.addTab("Tasks", IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/starthere.png"), taskpane);
+        tabbed.addTab("Start here", IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/starthere.png"), taskpane);
         final KeyStorePanel ksPane = new KeyStorePanel(signer);
         Action actions[] = ksPane.getActions();
         for (int i = 0; i < actions.length; i++) {
             Action action = actions[i];
             personalityTasks.add(action);
         }
-        tabbed.addTab("Personalities", IconTools.getPersonalities(), ksPane);
+        tabbed.addTab(AgentMessages.getText("identities"), IconTools.getPersonalities(), ksPane);
         final JPanel contacts = new JPanel();
         contacts.setLayout(new BorderLayout());
         final IdentityPanel contactsPanel = new IdentityPanel(this);
@@ -113,12 +114,12 @@ public class MainFrame extends JFrame {
             contactTasks.add(action);
         }
 
-        tabbed.addTab("Contacts", ICON_CONTACTS, contacts);
+        tabbed.addTab(AgentMessages.getText("contacts"), ICON_CONTACTS, contacts);
         final JPanel assets = new JPanel();
         assets.setLayout(new BorderLayout());
         final AssetPanel assetPanel = new AssetPanel(this);
         assets.add(assetPanel, BorderLayout.CENTER);
-        tabbed.addTab("Assets", ICON_ASSETS, assets);
+        tabbed.addTab(AgentMessages.getText("assets"), ICON_ASSETS, assets);
         actions = assetPanel.getActions();
         for (int i = 0; i < actions.length; i++) {
             Action action = actions[i];
