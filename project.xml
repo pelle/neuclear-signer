@@ -3,7 +3,7 @@
 
     <name>NeuClear Personal Trader</name>
     <id>neuclear-signer</id>
-    <currentVersion>1.0-beta13</currentVersion>
+    <currentVersion>1.0-beta14</currentVersion>
     <inceptionYear>2003</inceptionYear>
     <package>org.neuclear.signers.standalone</package>
     <logo>/images/logo.gif</logo>
