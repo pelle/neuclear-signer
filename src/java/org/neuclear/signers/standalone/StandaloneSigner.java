@@ -9,6 +9,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.util.InetAddrPort;
 import org.neuclear.commons.crypto.CryptoTools;
 import org.neuclear.commons.crypto.passphraseagents.PassPhraseAgent;
+import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.BrowsableSigner;
 import org.neuclear.commons.crypto.signers.DefaultSigner;
@@ -113,12 +114,13 @@ public class StandaloneSigner {
 
         label.setForeground(Color.WHITE);
         label.setFont(new Font("Arial", Font.BOLD, 14));
+        label.setBackground(Color.BLUE);
+        label.setOpaque(true);
+
         content.add(label, BorderLayout.NORTH);
         final MessageLabel message = new MessageLabel();
-        message.info("Ready");
         content.add(message, BorderLayout.SOUTH);
 //        content.add(quit, BorderLayout.SOUTH);
-        content.setBackground(Color.BLUE);
 
         JMenuBar menubar = new JMenuBar();
         frame.setJMenuBar(menubar);
@@ -129,6 +131,7 @@ public class StandaloneSigner {
 
         JMenuItem signItem = new JMenuItem("Sign file...",
                 KeyEvent.VK_S);
+        signItem.setIcon(IconTools.getSign());
         menu.add(signItem);
         menu.addSeparator();
         JMenuItem quitItem = new JMenuItem("Exit",
@@ -184,8 +187,12 @@ public class StandaloneSigner {
 
     }
 
+    private final static Icon webicon = IconTools.loadIcon(StandaloneSigner.class, "org/neuclear/signers/standalone/icons/browser.png");
+
     private static JMenuItem createWebMenuItem(final String title, final String url, final MessageLabel message) {
         final JMenuItem item = new JMenuItem(title);
+        item.setIcon(webicon);
+
         item.addActionListener(new ActionListener() {
             /**
              * Invoked when an action occurs.
@@ -258,7 +265,7 @@ public class StandaloneSigner {
         private final JFileChooser chooser;
         private final JFrame frame;
         private final MessageLabel message;
-        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.11 2004/04/21 23:04:52 pelle Exp $";
+        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.12 2004/04/22 14:41:29 pelle Exp $";
 
     }
 }
