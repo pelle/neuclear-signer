@@ -1,8 +1,8 @@
 package org.neuclear.signers.standalone;
 
-import org.neuclear.commons.crypto.passphraseagents.GuiDialogAgent;
 import org.neuclear.commons.crypto.passphraseagents.InteractiveAgent;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
+import org.neuclear.commons.crypto.passphraseagents.swing.SwingAgent;
 import org.neuclear.commons.crypto.signers.DefaultSigner;
 import org.neuclear.commons.crypto.signers.InvalidPassphraseException;
 import org.neuclear.commons.crypto.signers.Signer;
@@ -25,7 +25,7 @@ import java.io.PrintWriter;
  */
 public class StandaloneSigningServlet extends SigningServlet {
     public StandaloneSigningServlet() {
-        this.agent = new GuiDialogAgent();
+        this.agent = new SwingAgent();
     }
 
     protected Signer createSigner(ServletConfig config) throws UserCancellationException {
