@@ -90,7 +90,7 @@ public class AddIdentityDialog extends ProcessDialog {
         url.requestFocus();
     }
 
-    public void addContact(JTree tree) throws UserCancellationException {
+    public void addContact(JTree tree, String defurl) throws UserCancellationException {
         DefaultMutableTreeNode category = null;
         final IdentityTreeModel model = (IdentityTreeModel) tree.getModel();
         categories.setModel(model.getCategoriesModel());
@@ -104,6 +104,10 @@ public class AddIdentityDialog extends ProcessDialog {
         }
         if (category != null)
             categories.setSelectedItem(category);
+        if (defurl != null) {
+            url.setText(defurl);
+            ok.setEnabled(true);
+        }
         Object tmp = categories.getSelectedItem();
         Identity id = (Identity) openAndWait(new LongChildProcess() {
             public void run() {

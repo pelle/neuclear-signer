@@ -7,6 +7,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.util.InetAddrPort;
 import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.BrowsableSigner;
+import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
 
 /*
  *  The NeuClear Project and it's libraries are
@@ -34,15 +35,19 @@ import org.neuclear.commons.crypto.signers.BrowsableSigner;
  * Time: 11:43:45 AM
  */
 public class SigningServer extends Thread {
-    public SigningServer(BrowsableSigner signer, MessageLabel messages) {
+    public SigningServer(BrowsableSigner signer, MessageLabel messages, AddIdentityAction addId, AddIdentityAction addAsset) {
         this.signer = signer;
         this.messages = messages;
+        this.addId = addId;
+        this.addAsset = addAsset;
         try {
             server = new Server();
             server.addListener(new InetAddrPort("127.0.0.1", 11870));
             context = server.getContext("/");
             handler = new ServletHandler();
             handler.addServlet("/Signer", "org.neuclear.signers.standalone.StandaloneSigningServlet");
+            handler.addServlet("addcontact", "/AddContact", "org.neuclear.signers.standalone.AddContactServlet");
+            handler.addServlet("addasset", "/AddAsset", "org.neuclear.signers.standalone.AddContactServlet");
             context.addHandler(handler);
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,7 +70,18 @@ public class SigningServer extends Thread {
                         holder.start();
                     ((StandaloneSigningServlet) holder.getServlet()).setSigner(signer);
                     ((StandaloneSigningServlet) holder.getServlet()).setMessage(messages);
+                } else if (holder.getName().equals("addcontact")) {
+                    if (!holder.isStarted())
+                        holder.start();
+                    ((AddContactServlet) holder.getServlet()).setAddIdentityAction(addId);
+                } else if (holder.getName().equals("addasset")) {
+                    if (!holder.isStarted())
+                        holder.start();
+                    ((AddContactServlet) holder.getServlet()).setAddIdentityAction(addAsset);
+
+
                 }
+
             }
             messages.info("Signing Servlet Started");
         } catch (Exception e) {
@@ -79,4 +95,6 @@ public class SigningServer extends Thread {
     private HttpContext context;
     private ServletHandler handler;
     private Server server;
+    private AddIdentityAction addId;
+    private AddIdentityAction addAsset;
 }

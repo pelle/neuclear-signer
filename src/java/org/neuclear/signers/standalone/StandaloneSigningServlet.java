@@ -8,6 +8,8 @@ import org.neuclear.id.signers.SigningServlet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,13 +31,13 @@ public class StandaloneSigningServlet extends SigningServlet {
     protected String getTitle() {
         return "NeuClear Personal Signing Service";
     }
-/*
+
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-        if(!request.getRemoteAddr().equals("127.0.0.2"))
-            ((HttpServletResponse)response).sendError(500,"No external access allowed");
+        if (!request.getRemoteAddr().equals("127.0.0.1"))
+            ((HttpServletResponse) response).sendError(500, "No external access allowed");
         super.service(request, response);
     }
-*/
+
     public BrowsableSigner getSigner() {
         return super.getSigner();
     }

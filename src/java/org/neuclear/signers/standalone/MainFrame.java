@@ -17,6 +17,7 @@ import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.PersonalSigner;
 import org.neuclear.signers.standalone.identitylists.AssetPanel;
 import org.neuclear.signers.standalone.identitylists.IdentityPanel;
+import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
 import org.neuclear.signers.standalone.signingscreens.TransferAction;
 
 import javax.jnlp.BasicService;
@@ -114,9 +115,12 @@ public class MainFrame extends JFrame {
         contacts.add(contactsPanel, BorderLayout.CENTER);
 
         actions = contactsPanel.getActions();
+        AddIdentityAction addId = null;
         for (int i = 0; i < actions.length; i++) {
             Action action = actions[i];
             contactTasks.add(action);
+            if (action instanceof AddIdentityAction)
+                addId = (AddIdentityAction) action;
         }
 
         tabbed.addTab(AgentMessages.getText("contacts"), ICON_CONTACTS, contacts);
@@ -126,9 +130,12 @@ public class MainFrame extends JFrame {
         assets.add(assetPanel, BorderLayout.CENTER);
         tabbed.addTab(AgentMessages.getText("assets"), ICON_ASSETS, assets);
         actions = assetPanel.getActions();
+        AddIdentityAction addAsset = null;
         for (int i = 0; i < actions.length; i++) {
             Action action = actions[i];
             assetTasks.add(action);
+            if (action instanceof AddIdentityAction)
+                addAsset = (AddIdentityAction) action;
         }
 
         JTaskPaneGroup signingTasks = new JTaskPaneGroup();
@@ -230,7 +237,7 @@ public class MainFrame extends JFrame {
         show();
         setEnabled(false);
         CryptoTools.ensureProvider();
-        server = new SigningServer(signer, message);
+        server = new SigningServer(signer, message, addId, addAsset);
         server.start();
         if (splash != null)
             splash.dispose();

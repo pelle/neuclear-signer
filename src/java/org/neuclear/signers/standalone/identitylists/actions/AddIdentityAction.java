@@ -3,11 +3,6 @@ package org.neuclear.signers.standalone.identitylists.actions;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.commons.crypto.passphraseagents.swing.actions.NeuClearAction;
-import org.neuclear.id.Identity;
-import org.neuclear.id.InvalidNamedObjectException;
-import org.neuclear.id.NameResolutionException;
-import org.neuclear.id.resolver.Resolver;
-import org.neuclear.signers.standalone.identitylists.IdentityTreeModel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -38,7 +33,7 @@ import java.awt.event.KeyEvent;
  * Date: May 16, 2004
  * Time: 1:44:07 PM
  */
-public class AddIdentityAction extends NeuClearAction implements Runnable {
+public class AddIdentityAction extends NeuClearAction {
     public AddIdentityAction(JFrame frame, JTree tree) {
         this(frame, tree, "addcontact", IconTools.loadIcon(AddIdentityAction.class, "org/neuclear/signers/standalone/icons/contact_new.png"));
     }
@@ -57,56 +52,21 @@ public class AddIdentityAction extends NeuClearAction implements Runnable {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    dia.addContact(tree);
+                    dia.addContact(tree, null);
                 } catch (UserCancellationException e) {
                     ;
                 }
 
             }
         }).start();
-        /* if (tree.getSelectionPath()!=null){
-            MutableTreeNode node = (MutableTreeNode) tree.getSelectionPath().getLastPathComponent();
-            if (node instanceof IdentityNode){
-                category=((DefaultMutableTreeNode)node.getParent()).getUserObject().toString();
-            } else if ((node instanceof DefaultMutableTreeNode)&&!node.equals(tree.getModel().getRoot())){
-                category=((DefaultMutableTreeNode)node).getUserObject().toString();
-            } else {
-                category="Misc";
-            }
-        } else {
-            category="Misc";
-        }
-        url = JOptionPane.showInputDialog("Enter the url:");
-        if (!Utility.isEmpty(url))
-            new Thread(this).start();*/
     }
 
-    /**
-     * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
-     * <code>run</code> method to be called in that separately executing
-     * thread.
-     * <p/>
-     * The general contract of the method <code>run</code> is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
-    public void run() {
-        try {
-            Identity id = Resolver.resolveIdentity(url);
-            ((IdentityTreeModel) tree.getModel()).addIdentity(category, id);
-
-        } catch (NameResolutionException e) {
-            e.printStackTrace();
-        } catch (InvalidNamedObjectException e) {
-            e.printStackTrace();
-        }
-
+    public void webAddContact(String webAdd) throws UserCancellationException {
+        if (dia == null)
+            dia = new AddIdentityDialog(frame);
+        dia.addContact(tree, webAdd);
     }
 
-    private String url;
-    private String category;
     private final JTree tree;
     private AddIdentityDialog dia;
     private JFrame frame;
