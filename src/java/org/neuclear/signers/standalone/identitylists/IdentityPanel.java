@@ -14,6 +14,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 
 /*
@@ -110,17 +111,27 @@ public class IdentityPanel extends JPanel {
              * @param e the event that characterizes the change.
              */
             public void valueChanged(TreeSelectionEvent e) {
-                Object selected = e.getPath().getLastPathComponent();
+                final Object selected = e.getPath().getLastPathComponent();
                 if (selected != null && selected instanceof IdentityNode) {
-                    try {
-                        preview.setText(((IdentityNode) selected).getIdentity().getEncoded());
-                        preview.setVisible(true);
-                        scroll.scrollRectToVisible(new Rectangle(0, 0, scroll.getWidth(), scroll.getHeight()));
-                    } catch (NameResolutionException e1) {
-                        e1.printStackTrace();
-                    } catch (InvalidNamedObjectException e1) {
-                        e1.printStackTrace();
-                    }
+                    new Thread(new Runnable() {
+                        public void run() {
+                            try {
+                                final String encoded = ((IdentityNode) selected).getIdentity().getEncoded();
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    public void run() {
+                                        preview.setText(encoded);
+                                        preview.setVisible(true);
+                                        scroll.scrollRectToVisible(new Rectangle(0, 0, scroll.getWidth(), scroll.getHeight()));
+                                    }
+                                });
+                            } catch (NameResolutionException e1) {
+                                e1.printStackTrace();
+                            } catch (InvalidNamedObjectException e1) {
+                                e1.printStackTrace();
+                            }
+
+                        }
+                    }).start();
                 } else {
                     preview.setText("<b>Select an item above</b>");
                 }
@@ -131,7 +142,7 @@ public class IdentityPanel extends JPanel {
     }
 
     protected void addDefaults() {
-        IdentityListModel model = (IdentityListModel) tree.getModel();
+        IdentityTreeModel model = (IdentityTreeModel) tree.getModel();
         model.addCategory("Friends");
         model.addCategory("Family");
         model.addCategory("Business");
@@ -160,6 +171,16 @@ public class IdentityPanel extends JPanel {
         for (int i = 0; i < tree.getRowCount(); i++) {
             tree.expandRow(i);
         }
+    }
+
+    public ComboBoxModel getComboBoxModel() {
+        final MutableComboBoxModel model = ((IdentityTreeModel) tree.getModel()).getComboBoxModel();
+        if (tree.getSelectionPath() != null) {
+            TreePath path = tree.getSelectionPath();
+            if (path.getLastPathComponent() instanceof IdentityNode)
+                model.setSelectedItem(path.getLastPathComponent());
+        }
+        return model;
     }
 
     protected final IdentityTree tree;

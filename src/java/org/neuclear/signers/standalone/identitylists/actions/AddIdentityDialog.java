@@ -11,8 +11,8 @@ import org.neuclear.id.Identity;
 import org.neuclear.id.InvalidNamedObjectException;
 import org.neuclear.id.NameResolutionException;
 import org.neuclear.id.resolver.Resolver;
-import org.neuclear.signers.standalone.identitylists.IdentityListModel;
 import org.neuclear.signers.standalone.identitylists.IdentityNode;
+import org.neuclear.signers.standalone.identitylists.IdentityTreeModel;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -51,7 +51,7 @@ public class AddIdentityDialog extends ProcessDialog {
         super(frame, id);
         url.addKeyListener(keyValidator);
         url.addActionListener(okAction);
-        categories.addActionListener(okAction);
+//        categories.addActionListener(okAction);
     }
 
     public AddIdentityDialog(Frame frame) {
@@ -64,7 +64,7 @@ public class AddIdentityDialog extends ProcessDialog {
 
     protected void clear() {
         url.setText("");
-        categories.setSelectedItem(null);
+//        categories.setSelectedItem(null);
     }
 
     protected Component buildPanel() {
@@ -79,7 +79,7 @@ public class AddIdentityDialog extends ProcessDialog {
         builder.addLabel(AgentMessages.getTitle(id + ".url"), cc.xy(1, 1)).setLabelFor(url);
         builder.add(url, cc.xy(3, 1));
         categories = new JComboBox();
-//        categories.setEditable(true);
+        categories.setEditable(true);
         builder.addLabel(AgentMessages.getTitle(id + ".categories"), cc.xy(1, 3)).setLabelFor(categories);
         builder.add(categories, cc.xy(3, 3));
 
@@ -88,12 +88,11 @@ public class AddIdentityDialog extends ProcessDialog {
 
     protected void initializeForm() {
         url.requestFocus();
-        categories.setSelectedIndex(0);
     }
 
     public void addContact(JTree tree) throws UserCancellationException {
         DefaultMutableTreeNode category = null;
-        final IdentityListModel model = (IdentityListModel) tree.getModel();
+        final IdentityTreeModel model = (IdentityTreeModel) tree.getModel();
         categories.setModel(model.getCategoriesModel());
         if (tree.getSelectionPath() != null) {
             MutableTreeNode node = (MutableTreeNode) tree.getSelectionPath().getLastPathComponent();
@@ -105,24 +104,25 @@ public class AddIdentityDialog extends ProcessDialog {
         }
         if (category != null)
             categories.setSelectedItem(category);
+        Object tmp = categories.getSelectedItem();
         Identity id = (Identity) openAndWait(new LongChildProcess() {
             public void run() {
                 try {
                     Identity id = Resolver.resolveIdentity(url.getText());
                     setResult(id);
                 } catch (NameResolutionException e) {
-                    parent.error(e);
+                    parent.error("Unknown Page: " + url.getText());
                 } catch (InvalidNamedObjectException e) {
-                    parent.error(e);
+                    parent.error("The page at " + url.getText() + " was not signed");
                 }
             }
         });
-        TreeNode idnode = model.addIdentity(category, id);
         Object selected = categories.getSelectedItem();
         if (selected instanceof DefaultMutableTreeNode)
             category = (DefaultMutableTreeNode) selected;
         else
             category = model.getCategory(selected.toString());
+        TreeNode idnode = model.addIdentity(category, id);
         final TreePath path = new TreePath(new Object[]{model.getRoot(), category, idnode});
         tree.setSelectionPath(path);
         tree.expandPath(path);

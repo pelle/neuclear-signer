@@ -1,8 +1,6 @@
 package org.neuclear.signers.standalone.identitylists;
 
 import javax.swing.*;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
 
 /*
  *  The NeuClear Project and it's libraries are
@@ -26,39 +24,25 @@ import javax.swing.event.TreeModelListener;
 
 /**
  * User: pelleb
- * Date: May 15, 2004
- * Time: 3:20:21 PM
+ * Date: May 19, 2004
+ * Time: 12:26:42 PM
  */
-public class IdentityTree extends JTree {
-    public IdentityTree(String title) {
-        this(IdentityTreeModel.getModel(title));
-        setShowsRootHandles(false);
-//        setRootVisible(false);
-//        expandPath(new TreePath((TreeNode) getModel().getRoot()));
-        setCellRenderer(new IdentityTreeCellRenderer());
-        getModel().addTreeModelListener(new TreeModelListener() {
-            public void treeNodesChanged(TreeModelEvent e) {
-
+public class IdentityComboBox extends JComboBox {
+    public IdentityComboBox() {
+        setRenderer(new IdentityListCellRenderer());
+        setEditable(true);
+/*
+        addItemListener(new ItemListener(){
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange()==ItemEvent.SELECTED&&(e.getItem() instanceof DefaultMutableTreeNode) ){
+                    DefaultMutableTreeNode node=(DefaultMutableTreeNode) e.getItem();
+                    if (node.getChildCount()>0)
+                        ((JComboBox)e.getItemSelectable()).setSelectedItem(node.getChildAt(1));
+                    else
+                        ((JComboBox)e.getItemSelectable()).setSelectedIndex(-1);
+                }
             }
-
-            public void treeNodesInserted(TreeModelEvent e) {
-                scrollPathToVisible(e.getTreePath());
-            }
-
-            public void treeNodesRemoved(TreeModelEvent e) {
-
-            }
-
-            public void treeStructureChanged(TreeModelEvent e) {
-
-            }
-
         });
+*/
     }
-
-
-    public IdentityTree(IdentityTreeModel model) {
-        super(model);
-    }
-
 }

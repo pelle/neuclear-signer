@@ -7,7 +7,7 @@ import org.neuclear.id.Identity;
 import org.neuclear.id.InvalidNamedObjectException;
 import org.neuclear.id.NameResolutionException;
 import org.neuclear.id.resolver.Resolver;
-import org.neuclear.signers.standalone.identitylists.IdentityListModel;
+import org.neuclear.signers.standalone.identitylists.IdentityTreeModel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -95,7 +95,7 @@ public class AddIdentityAction extends NeuClearAction implements Runnable {
     public void run() {
         try {
             Identity id = Resolver.resolveIdentity(url);
-            ((IdentityListModel) tree.getModel()).addIdentity(category, id);
+            ((IdentityTreeModel) tree.getModel()).addIdentity(category, id);
 
         } catch (NameResolutionException e) {
             e.printStackTrace();

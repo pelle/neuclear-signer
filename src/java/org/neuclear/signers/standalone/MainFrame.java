@@ -14,6 +14,7 @@ import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.PersonalSigner;
 import org.neuclear.signers.standalone.identitylists.AssetPanel;
 import org.neuclear.signers.standalone.identitylists.IdentityPanel;
+import org.neuclear.signers.standalone.signingscreens.TransferAction;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
@@ -148,6 +149,8 @@ public class MainFrame extends JFrame {
 
         }
         menu.addSeparator();
+        TransferAction maketransfer = new TransferAction(this, signer, assetPanel, contactsPanel);
+        assetTasks.add(maketransfer);
         signdoc = new SignDocumentAction(signer);
         signingTasks.add(signdoc);
         JMenuItem signItem = new JMenuItem(signdoc);

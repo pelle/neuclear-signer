@@ -34,7 +34,7 @@ import javax.swing.*;
 public class AssetPanel extends IdentityPanel {
     public AssetPanel(JFrame frame) {
         super(frame, "Assets");
-        IdentityListModel model = (IdentityListModel) tree.getModel();
+        IdentityTreeModel model = (IdentityTreeModel) tree.getModel();
 //        model.addCategory("Money");
 /*
         try {
@@ -63,7 +63,7 @@ public class AssetPanel extends IdentityPanel {
     }
 
     protected void addDefaults() {
-        IdentityListModel model = (IdentityListModel) tree.getModel();
+        IdentityTreeModel model = (IdentityTreeModel) tree.getModel();
         model.addCategory("Money");
         model.addCategory("Financial");
         model.addCategory("Telecom");
