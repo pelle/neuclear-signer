@@ -50,6 +50,7 @@ public class SigningServer extends Thread {
             handler.addServlet("/Signer", "org.neuclear.signers.standalone.StandaloneSigningServlet");
             handler.addServlet("addcontact", "/AddContact", "org.neuclear.signers.standalone.AddContactServlet");
             handler.addServlet("addasset", "/AddAsset", "org.neuclear.signers.standalone.AddContactServlet");
+            handler.addServlet("status", "/login.png", "org.neuclear.signers.standalone.StatusServlet");
             context.addHandler(handler);
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,22 +68,16 @@ public class SigningServer extends Thread {
                 ServletHolder[] holders = handler.getServlets();
                 for (int i = 0; i < holders.length; i++) {
                     ServletHolder holder = holders[i];
+                    if (!holder.isStarted())
+                        holder.start();
                     if (holder.getServlet() instanceof StandaloneSigningServlet) {
                         //                    System.out.println("Found servlet: "+holder.getName());
-                        if (!holder.isStarted())
-                            holder.start();
                         ((StandaloneSigningServlet) holder.getServlet()).setSigner(signer);
                         ((StandaloneSigningServlet) holder.getServlet()).setMessage(messages);
                     } else if (holder.getName().equals("addcontact")) {
-                        if (!holder.isStarted())
-                            holder.start();
                         ((AddContactServlet) holder.getServlet()).setAddIdentityAction(addId);
                     } else if (holder.getName().equals("addasset")) {
-                        if (!holder.isStarted())
-                            holder.start();
                         ((AddContactServlet) holder.getServlet()).setAddIdentityAction(addAsset);
-
-
                     }
 
                 }
