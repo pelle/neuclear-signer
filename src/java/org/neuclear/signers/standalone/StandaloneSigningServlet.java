@@ -45,11 +45,13 @@ public class StandaloneSigningServlet extends SigningServlet {
     protected String getTitle(){
         return "NeuClear Personal Signing Service";
     }
+/*
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
         if(!request.getRemoteAddr().equals("127.0.0.2"))
             ((HttpServletResponse)response).sendError(500,"No external access allowed");
         super.service(request, response);
     }
+*/
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");

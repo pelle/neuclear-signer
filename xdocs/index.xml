@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<document>
+
+	<properties>
+		<title>NeuClear - Signer</title>
+		<author email="pelle@neubia.com">Pelle Braendgaard</author>
+	</properties>
+
+	<body>
+		<section name="Introduction">
+			<p>
+				The NeuClear Signer is a standalone application to allow digital signing of contracts in a normal web
+                environment. The signer includes all tools necessary to create your own Identity in NeuClear.
+			</p>
+       </section>
+        <section name="Release 0.8.1 of NeuClear Signer">
+            <p>
+                The current stable release of the NeuClear Signer, includes the following features:
+            </p>
+            <ul>
+                <li>Built in web server</li>
+                <li>Console based Identity Generator</li>
+                <li>Simple Web Interface for normal Signing purposes</li>
+                <li>Executable Jar file that should run on any system with Java 1.4 and above.</li>
+                <li>Current target users are developers and power users. (You need to be able to open a console to initialize it.)</li>
+            </ul>
+        </section>
+        <section name="Road Map">
+            <p>
+                Our aim for the next version 0.9 is to stabilize and freeze the underlying xml formats and standards as well
+                as to create more userland tools. Thus the goal is to fix the underlying format making it easier for other implementations
+                of NeuClear ID. This should be reached early on in January 2004
+            </p>
+            <p>
+                Our goal is for 1.0 the following release to be fairly polished from a usability standpoint. Our goal is to release this
+                in February 2004.
+            </p>
+        </section>
+	</body>
+
+</document>

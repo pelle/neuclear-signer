@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <title>The NeuClear Signer HowTo</title>
+        <author email="pelle@neubia.com">Pelle Braendgaard</author>
+    </properties>
+
+    <body>
+        <section name="The NeuClear Signer HowTo">
+
+            <h4>Scope</h4>
+            <p>
+                This document describes in Example form the usage of the NeuClear Signer Application. T
+            </p>
+            <h4>Audience</h4>
+            <p>
+                The audience for this howto guide are expected to be relatively familiar with command line on their OS.
+                The instructions are
+                currently listed for unix type machines, but it should work on any machine running jdk1.4 including Windows.
+            </p>
+            <h4>Purpose</h4>
+            <p>
+                The main purpose of this document is to get a user up and running with his or her own NeuClear Identity
+                and a Signing Application to
+            </p>
+        </section>
+        <section name="Creating an Top Level Identity for your Domain Name">
+            <p>
+                All messages (
+                <a href="apidocs/org/neuclear/id/SignedNamedObject.html">SignedNamedObjects</a> in NeuClear lingo)
+                in NeuClear ID must be signed by an
+                <a href="apidocs/org/neuclear/id/Identity.html">Identity</a>. So to get started we
+                must first create a new Identity.
+            </p>
+            <p>
+                Each domain name must create a top level identity, which main job in life is to sign sub identities.
+                So that is where we start.
+            </p>
+            <p>
+                The easiest way to get started is to use the neuclear-id-app.jar from a command line.
+                We need to have the following ready:
+            </p>
+            <ul>
+                <li>The Name</li>
+                <li>A default receiver</li>
+            </ul>
+            <h4>Pick an Identity Name</h4>
+            <p>
+                As we first need to create a top level Identity for your domain we will use the name neu://yourdomain.com as the
+                Identity name.
+            </p>
+            <h4>Pick a Default Receiver</h4>
+            <p>
+                The default receiver is where people will send you payments or other contracts that relate to you.
+                For now to keep things simple lets use your email address as the default receiver.
+            </p>
+            <h4>Create the Selfsigned Certificate</h4>
+            <p>
+                Download the
+                <a href="http://neuclear.org/maven/neuclear-id/jars/neuclear-signer-0.8.1.jar">NeuClear Signer Executable</a>.
+                Excuse the long and ugly name, we will package it nicer later on. Currently this tool allows you to create a certificate and
+                sign it. Lets run it with our ID and receiver we decided on earlier.
+            </p>
+            <source>bash-2.05b$ java -jar neuclear-signer-app-0.8.1.jar -n neu://yourdomain.com -b mailto:admin@yourdomain.com
+Please enter passphrase for: Keystore password for: /home/USERNAME/.neuclear/keystore.jks ('q' to quit)
+: *********
+Do you wish to remember your entered passphrases for this sesson?
+yes/(no)
+You do not currently have a key matching this name. Do you with to create one?
+(yes)/no
+Generating Keys for neu://yourdomain.com...
+Please enter passphrase for: neu://yourdomain.com ('q' to quit)
+: *********
+DONE
+STORING Keys
+Please enter passphrase for: /home/pelleb/.neuclear/keystore.jks ('q' to quit)
+: *********
+Signing by neu://yourdomain.com ...
+Outputting to: _NEUID/yourdomain.com/root.id
+
+You now need to copy the file: _NEUID/yourdomain.com/root.id to your webserver so it is visible at the following location:
+http://yourdomain.com/_NEUID/yourdomain.com/root.id
+
+Once this is done you will be able to verify your new Identity like this:
+USERNAME$ java -jar neuclear-signer-app-0.8.1.jar -v neu://yourdomain.com
+</source>
+            <p>
+                The program asks you for the passphrases for both the keystore and your key. They can be the same or different.
+                Please make sure that you can remember the passphrases, as you wont be able to use your keys if you dont.
+            </p>
+            <h4>Copy certificate to Web Server</h4>
+            <p>
+                The Certificate must now be moved to your web server. It has to live in the following file:
+                <tt>http://yourdomain.com/_NEUID/yourdomain.com/root.id</tt>
+                <br/>
+                The simplest way to do this in unix is to use
+                <tt>scp</tt>:
+            </p>
+            <source>scp -r _NEUID/
+                <b>user@yourdomain.com:/home/httpd/htdocs/</b>
+            </source>
+            <p>
+                where
+                <tt>user</tt> is your username on the webserver.
+                <tt>yourdomain.com</tt> is webserver domain name and
+                <tt>/home/httpd/htdocs/</tt> the full absolute path to the root of your web server.
+            </p>
+        </section>
+        <section name="Test your Identity">
+            <p>
+                To verify an Identity type the following in your command prompt:
+            </p>
+            <source>$ java -jar neuclear-signer-0.8.1.jar --verify neu://pelle@neuclear.org
+Resolving and Verifying: neu://pelle@neuclear.org
+Signed Object: neu://pelle@neuclear.org is verified
+was signed at: 2003-12-09T10:00:42,466EST
+Is of type: org.neuclear.id.Identity
+repository: http://neuclear.org/_NEUID
+signer: http://localhost:11870/Signer</source>
+            <p>
+                If you have copied it to the web server, you should try it with your new identity that you created above.
+            </p>
+        </section>
+        <section name="Creating a Sub Identity">
+            <p>
+                We dont recommend using top level identities for anything but signing sub identities. So for us to actually get started on some
+                real fun we need to create a new sub identity. This is pretty much a repitition of the above, so I will just highlight the differences
+                here.
+            </p>
+            <h4>Chosing the name</h4>
+            <p>
+                By convention there are two ways you can name a sub identity. For individuals or roles use the familiar email naming
+                convention. Such as:
+            </p>
+            <ul>
+                <li>
+                    <tt>neu://bob@yourdomain.com</tt>
+                </li>
+                <li>
+                    <tt>neu://sales@yourdomain.com</tt>
+                </li>
+            </ul>
+            <p>
+                If you want your sub identity to be a process or service. Such as an ecommerce site, an asset transfer system or an exchange system use
+                this format:
+            </p>
+            <ul>
+                <li>
+                    <tt>neu://yourdomain.com/store</tt>
+                </li>
+                <li>
+                    <tt>neu://yourdomain.com/homebanking</tt>
+                </li>
+            </ul>
+            <p>
+                The two formats are functionally equivalent, but are separated stylistically to make it easier to understand for
+                end users.
+            </p>
+            <p>
+                So for our example we picked
+                <tt>neu://bob@yourdomain.com</tt>
+            </p>
+            <h4>Create the Signed Certificate</h4>
+            <p>
+                Again we need to create a certificate. This time however it is not self signed, but signed
+                 by the top level identity we created above. As long as we create the two identities on the same
+                 machine. The process is completely identical from a users stand point, with the notable exception
+                 that we are asked for the root identity's passphrase and not the one of the sub identity.
+            </p>
+            <source>bash-2.05b$ java -jar neuclear-signer-app-0.8.1.jar -n neu://bob@yourdomain.com -b mailto:bob@yourdomain.com
+Please enter passphrase for: Keystore password for: /home/USERNAME/.neuclear/keystore.jks ('q' to quit)
+: *********
+Do you wish to remember your entered passphrases for this sesson?
+yes/(no)
+You do not currently have a key matching this name. Do you with to create one?
+(yes)/no
+Generating Keys for neu://bob@yourdomain.com...
+Please enter passphrase for: neu://bob@yourdomain.com ('q' to quit)
+: *********
+DONE
+STORING Keys
+Please enter passphrase for: /home/pelleb/.neuclear/keystore.jks ('q' to quit)
+: *********
+Signing by neu://yourdomain.com ...
+Please enter passphrase for: neu://yourdomain.com ('q' to quit)
+: *********
+Outputting to: _NEUID/yourdomain.com/@bob/root.id
+
+You now need to copy the file: _NEUID/yourdomain.com/@bob/root.id to your webserver so it is visible at the following location:
+http://yourdomain.com/_NEUID/yourdomain.com/@bob/root.id
+
+Once this is done you will be able to verify your new Identity like this:
+USERNAME$ java -jar target/neuclear-signer-app-0.8.1.jar -v neu://bob@yourdomain.com
+</source>
+            <p>
+                Note this is basically the same as before, except we also have a second step where you are asked the
+                passphrase for <tt>neu://yourdomain.com</tt> to sign the new certificate.
+            </p>
+            <p>
+                Now all that remains is to copy it to your web server exactly like you did above and your new sub identity is
+                ready and live.
+            </p>
+
+        </section>
+        <section name="Running the Signer">
+            <p>
+                Once you have created your first initial Identity you can start the Web Signer.
+                In windows and on Mac OS/X you can simply double click on the executable and it will run.
+                In Unix simply run the executable like before, but without any arguments:
+            </p>
+            <source>bash-2.05b$ java -jar neuclear-signer-app-0.8.1.jar</source>
+        </section>
+
+
+    </body>
+
+</document>

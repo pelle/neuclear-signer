@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<document>
+
+    <properties>
+        <title>Installing</title>
+        <author email="pelle@neubia.com">Pelle Braendgaard</author>
+    </properties>
+
+    <body>
+        <section name="Requirements">
+            <p>
+                Any JRE 1.4 VM should work.
+                <a href="http://www.java.com:80/en/download/manual.jsp">Get the latest for your platform straight from Sun</a>.
+                If you are running Mac OS/X Jaguar or Panther you should already be set. Please let us know of any problems.
+            </p>
+        </section>
+        <section name="NeuClear Signer Executable">
+            <p>
+                 Download the
+                <a href="http://prdownloads.sourceforge.net/neuclear/neuclear-signer-0.8.1.jar?download">NeuClear Signer Executable</a>.
+                 Excuse the long and ugly name, we will package it nicer later on.
+            </p>
+            <p>
+                The tool is intended to be used from the commandline like this:
+            </p>
+            <source>$ java -jar neuclear-signer-0.8.1.jar</source>
+            <p>
+                This will list the options available. For more indepth information on the tool see the <a href="bdg.html">
+                    Busy Developers Guide
+                </a>
+            </p>
+        </section>
+    </body>
+</document>
