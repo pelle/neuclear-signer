@@ -1,8 +1,8 @@
 package org.neuclear.signers.standalone.identitylists;
 
-import org.neuclear.id.InvalidNamedObjectException;
-import org.neuclear.id.NameResolutionException;
-import org.neuclear.id.resolver.Resolver;
+import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
+import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
+import org.neuclear.signers.standalone.identitylists.actions.RemoveIdentityAction;
 
 /*
  *  The NeuClear Project and it's libraries are
@@ -34,6 +34,7 @@ public class AssetPanel extends IdentityPanel {
         super("Assets");
         IdentityListModel model = (IdentityListModel) tree.getModel();
 //        model.addCategory("Money");
+/*
         try {
             model.addIdentity("Money", Resolver.resolveIdentity("http://bux.neuclear.org/bux.html"));
         } catch (NameResolutionException e) {
@@ -41,11 +42,21 @@ public class AssetPanel extends IdentityPanel {
         } catch (InvalidNamedObjectException e) {
             e.printStackTrace();
         }
+        expandTree();
+*/
 
 //        model.addCategory("Financial");
 //        model.addCategory("Telecommunications");
 //        model.addCategory("Entertainment");
 //        model.addCategory("Misc");
 
+    }
+
+    protected AddIdentityAction createAddAction() {
+        return new AddIdentityAction((IdentityListModel) tree.getModel(), "addasset", IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset_new.png"));
+    }
+
+    protected RemoveIdentityAction createRemoveAction() {
+        return new RemoveIdentityAction(tree, "removeasset", IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset_remove.png"));
     }
 }

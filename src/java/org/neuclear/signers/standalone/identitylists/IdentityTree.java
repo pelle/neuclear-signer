@@ -1,8 +1,8 @@
 package org.neuclear.signers.standalone.identitylists;
 
 import javax.swing.*;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 
 /*
  *  The NeuClear Project and it's libraries are
@@ -31,15 +31,34 @@ import javax.swing.tree.TreePath;
  */
 public class IdentityTree extends JTree {
     public IdentityTree(String title) {
-        this(new IdentityListModel(title));
+        this(IdentityListModel.getModel(title));
         setShowsRootHandles(false);
-        setRootVisible(true);
-        expandPath(new TreePath((TreeNode) getModel().getRoot()));
+//        setRootVisible(false);
+//        expandPath(new TreePath((TreeNode) getModel().getRoot()));
         setCellRenderer(new IdentityTreeCellRenderer());
+        getModel().addTreeModelListener(new TreeModelListener() {
+            public void treeNodesChanged(TreeModelEvent e) {
 
+            }
+
+            public void treeNodesInserted(TreeModelEvent e) {
+                scrollPathToVisible(e.getTreePath());
+            }
+
+            public void treeNodesRemoved(TreeModelEvent e) {
+
+            }
+
+            public void treeStructureChanged(TreeModelEvent e) {
+
+            }
+
+        });
     }
+
 
     public IdentityTree(IdentityListModel model) {
         super(model);
     }
+
 }

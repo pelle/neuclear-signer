@@ -1,11 +1,8 @@
 package org.neuclear.signers.standalone.identitylists;
 
-import org.neuclear.asset.contracts.Asset;
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
-import org.neuclear.id.Identity;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
@@ -42,21 +39,19 @@ public class IdentityTreeCellRenderer extends DefaultTreeCellRenderer {
                                                   boolean leaf,
                                                   int row,
                                                   boolean hasFocus) {
-
+        final boolean isId = value instanceof IdentityNode;
         super.getTreeCellRendererComponent(tree, value, sel,
-                expanded, leaf, row,
+                expanded, isId, row,
                 hasFocus);
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-        if (leaf && node.getUserObject() instanceof Asset) {
-            setIcon(assetIcon);
-            Asset asset = (Asset) node.getUserObject();
-            setToolTipText(asset.getNickname());
-            setText(asset.getNickname() + " (" + asset.getURL() + ")");
-        } else if (leaf && node.getUserObject() instanceof Identity) {
-            setIcon(contactIcon);
-            Identity id = (Identity) node.getUserObject();
-            setToolTipText(id.getNickname());
-            setText(id.getNickname() + " (" + id.getURL() + ")");
+        if (isId) {
+            IdentityNode node = (IdentityNode) value;
+            if (leaf && (node.getType() == IdentityNode.ASSET_TYPE)) {
+                setIcon(assetIcon);
+            } else if (leaf && (node.getType() == IdentityNode.ID_TYPE)) {
+                setIcon(contactIcon);
+            }
+            setToolTipText(node.getDigest());
+            setText(node.getTitle());
         } else {
             setToolTipText(null); //no tool tip
         }

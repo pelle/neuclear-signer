@@ -3,11 +3,15 @@ package org.neuclear.signers.standalone.identitylists;
 import org.neuclear.id.Identity;
 
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,20 +40,41 @@ import java.util.HashMap;
  * Date: May 15, 2004
  * Time: 2:27:25 PM
  */
-public class IdentityListModel extends DefaultTreeModel implements ListModel {
-    public IdentityListModel(String title) {
+public class IdentityListModel extends DefaultTreeModel implements ComboBoxModel {
+    public IdentityListModel(String title, File file) {
         super(new DefaultMutableTreeNode(title));
         this.title = title;
         list = new ArrayList();
-        listeners = new EventListenerList();
         categories = new HashMap();
+        this.file = file;
+        addTreeModelListener(new TreeModelListener() {
+            public void treeNodesChanged(TreeModelEvent event) {
+                save();
+            }
+
+            public void treeNodesInserted(TreeModelEvent event) {
+                save();
+            }
+
+            public void treeNodesRemoved(TreeModelEvent event) {
+                save();
+            }
+
+            public void treeStructureChanged(TreeModelEvent event) {
+                save();
+
+            }
+
+        });
     }
 
     public DefaultMutableTreeNode addCategory(String title) {
         DefaultMutableTreeNode category = new DefaultMutableTreeNode(title, true);
 
-        ((DefaultMutableTreeNode) getRoot()).add(category);
+        insertNodeInto(category, (MutableTreeNode) root, root.getChildCount());
+//        ((DefaultMutableTreeNode) getRoot());.add(category);
         categories.put(title, category);
+//        fireTreeNodesInserted(getRoot(),new Object[]{getRoot()},new int[]{((MutableTreeNode)getRoot()).getIndex(category)},new Object[]{category});
         return category;
     }
 
@@ -59,10 +84,15 @@ public class IdentityListModel extends DefaultTreeModel implements ListModel {
         return (DefaultMutableTreeNode) categories.get(title);
     }
 
-    public void addIdentity(String category, Identity id) {
-        list.add(id);
-        getCategory(category).add(new DefaultMutableTreeNode(id, false));
+    public TreeNode addIdentity(String category, Identity id) {
+        final DefaultMutableTreeNode node = new DefaultMutableTreeNode(id, false);
+        DefaultMutableTreeNode parent = getCategory(category);
+        final IdentityNode idnode = new IdentityNode(id);
+        insertNodeInto(idnode, parent, parent.getChildCount());
+        list.add(idnode);
         fireListUpdated();
+//        save();
+        return node;
     }
 
     public void addIdentity(Identity id) {
@@ -95,7 +125,7 @@ public class IdentityListModel extends DefaultTreeModel implements ListModel {
      * @param l the <code>ListDataListener</code> to be added
      */
     public void addListDataListener(ListDataListener l) {
-        listeners.add(ListDataListener.class, l);
+        listenerList.add(ListDataListener.class, l);
     }
 
     /**
@@ -105,12 +135,12 @@ public class IdentityListModel extends DefaultTreeModel implements ListModel {
      * @param l the <code>ListDataListener</code> to be removed
      */
     public void removeListDataListener(ListDataListener l) {
-        listeners.remove(ListDataListener.class, l);
+        listenerList.remove(ListDataListener.class, l);
     }
 
     protected void fireListUpdated() {
         // Guaranteed to return a non-null array
-        Object[] listenerArray = listeners.getListenerList();
+        Object[] listenerArray = listenerList.getListenerList();
         // Process the listeners last to first, notifying
         // those that are interested in this event
         ListDataEvent event = null;
@@ -124,10 +154,52 @@ public class IdentityListModel extends DefaultTreeModel implements ListModel {
         }
     }
 
+    public Object getSelectedItem() {
+        return selected;
+    }
+
+    public void setSelectedItem(Object o) {
+        selected = o;
+    }
+
+    private void save() {
+        try {
+            System.out.println("Saving");
+            ObjectOutputStream os = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+            os.writeObject(this);
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setFile(File file) {
+        this.file = file;
+    }
+
+    public static IdentityListModel getModel(String title) {
+        File file = new File(System.getProperty("user.home") + "/.neuclear/ui/" + title + ".ser");
+        if (file.exists()) {
+            try {
+                ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+                IdentityListModel model = (IdentityListModel) in.readObject();
+                in.close();
+                model.setFile(file);
+                return model;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        file.getParentFile().mkdirs();
+        return new IdentityListModel(title, file);
+    }
+
+    private transient File file;
+    private Object selected;
     private HashMap categories;
     private ArrayList list;
-    private EventListenerList listeners;
     private String title;
-    private DefaultMutableTreeNode root;
 
 }

@@ -104,12 +104,26 @@ public class MainFrame extends JFrame {
         tabbed.addTab("Personalities", IconTools.getPersonalities(), ksPane);
         final JPanel contacts = new JPanel();
         contacts.setLayout(new BorderLayout());
-        contacts.add(new IdentityPanel(), BorderLayout.CENTER);
+        final IdentityPanel contactsPanel = new IdentityPanel();
+        contacts.add(contactsPanel, BorderLayout.CENTER);
+
+        actions = contactsPanel.getActions();
+        for (int i = 0; i < actions.length; i++) {
+            Action action = actions[i];
+            contactTasks.add(action);
+        }
+
         tabbed.addTab("Contacts", ICON_CONTACTS, contacts);
         final JPanel assets = new JPanel();
         assets.setLayout(new BorderLayout());
-        assets.add(new AssetPanel(), BorderLayout.CENTER);
+        final AssetPanel assetPanel = new AssetPanel();
+        assets.add(assetPanel, BorderLayout.CENTER);
         tabbed.addTab("Assets", ICON_ASSETS, assets);
+        actions = assetPanel.getActions();
+        for (int i = 0; i < actions.length; i++) {
+            Action action = actions[i];
+            assetTasks.add(action);
+        }
 
 
         MessageLabel message = new MessageLabel();

@@ -1,9 +1,9 @@
 package org.neuclear.signers.standalone.identitylists;
 
-import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
-import org.neuclear.id.InvalidNamedObjectException;
-import org.neuclear.id.NameResolutionException;
-import org.neuclear.id.resolver.Resolver;
+import com.jgoodies.plaf.HeaderStyle;
+import com.jgoodies.plaf.Options;
+import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
+import org.neuclear.signers.standalone.identitylists.actions.RemoveIdentityAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,29 +38,66 @@ public class IdentityPanel extends JPanel {
         this.setLayout(new BorderLayout());
         tree = new IdentityTree(title);
         JToolBar toolbar = new JToolBar();
-        toolbar.add(new JButton(IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/contact_new.png")));
-        toolbar.add(new JButton(IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/contact_remove.png")));
+        toolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE);
+        toolbar.setFloatable(true);
+        toolbar.setRollover(true);
+
+        addContact = createAddAction();
+        final JButton addButton = new JButton(addContact);
+        addButton.setText(null);
+        addButton.putClientProperty(Options.IS_NARROW_KEY, Boolean.TRUE);
+
+        toolbar.add(addButton);
+        removeContact = createRemoveAction();
+        final JButton removeButton = new JButton(removeContact);
+        removeButton.setText(null);
+        removeButton.putClientProperty(Options.IS_NARROW_KEY, Boolean.TRUE);
+
+        toolbar.add(removeButton);
         add(toolbar, BorderLayout.NORTH);
         add(new JScrollPane(tree), BorderLayout.CENTER);
+        add(new JComboBox((ComboBoxModel) tree.getModel()), BorderLayout.SOUTH);
+    }
+
+    protected RemoveIdentityAction createRemoveAction() {
+        return new RemoveIdentityAction(tree);
+    }
+
+    protected AddIdentityAction createAddAction() {
+        return new AddIdentityAction((IdentityListModel) tree.getModel());
     }
 
     public IdentityPanel() {
         this("Identities");
         IdentityListModel model = (IdentityListModel) tree.getModel();
 //        model.addCategory("Friends");
-        try {
-            model.addIdentity("NeuClear Developers", Resolver.resolveIdentity("http://talk.org/pelletest.html"));
-            model.addIdentity("Friends", Resolver.resolveIdentity("http://ao.com.au/iangreen_sig.html"));
-        } catch (NameResolutionException e) {
-            e.printStackTrace();
-        } catch (InvalidNamedObjectException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            model.addIdentity("NeuClear Developers", Resolver.resolveIdentity("http://talk.org/pelletest.html"));
+//            model.addIdentity("Friends", Resolver.resolveIdentity("http://ao.com.au/iangreen_sig.html"));
+        expandTree();
+
+//        } catch (NameResolutionException e) {
+//            e.printStackTrace();
+//        } catch (InvalidNamedObjectException e) {
+//            e.printStackTrace();
+//        }
 //        model.addCategory("Business");
 //        model.addCategory("Family");
 //        model.addCategory("Misc");
 
     }
 
+    public Action[] getActions() {
+        return new Action[]{addContact};
+    }
+
+    public void expandTree() {
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.expandRow(i);
+        }
+    }
+
     protected final IdentityTree tree;
+    private AddIdentityAction addContact;
+    private RemoveIdentityAction removeContact;
 }
