@@ -79,7 +79,7 @@
         <dependency>
             <id>neuclear-id</id>
             <name>neuclear-id</name>
-            <version>1.0-beta12</version>
+            <version>1.0-beta13</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
