@@ -71,7 +71,7 @@
         <dependency>
             <id>neuclear-pay</id>
             <name>neuclear-pay</name>
-            <version>1.0-beta7</version>
+            <version>1.0-beta9</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
@@ -79,7 +79,7 @@
         <dependency>
             <id>neuclear-id</id>
             <name>neuclear-id</name>
-            <version>1.0-beta14</version>
+            <version>1.0-beta16</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
@@ -87,7 +87,7 @@
         <dependency>
             <id>neuclear-commons</id>
             <name>neuclear-commons</name>
-            <version>1.0-beta10</version>
+            <version>1.0-beta12</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
