@@ -43,7 +43,7 @@ public class PersonalSigner implements BrowsableSigner {
 //        signer=null;
         this.frame = frame;
         this.dia = new OpenSignerDialog(frame, new SwingAgent());
-        open();
+//        open();
     }
 
     public final byte[] sign(final String name, final byte[] data) throws NonExistingSignerException, UserCancellationException {
@@ -56,7 +56,7 @@ public class PersonalSigner implements BrowsableSigner {
             open();
     }
 
-    private void open() throws UserCancellationException {
+    void open() throws UserCancellationException {
         signer = dia.openSigner();
     }
 
@@ -94,6 +94,10 @@ public class PersonalSigner implements BrowsableSigner {
     public void save() throws UserCancellationException {
         if (signer != null)
             signer.save();
+    }
+
+    public boolean isOpen() {
+        return signer != null;
     }
 
     public Iterator iterator() throws KeyStoreException {

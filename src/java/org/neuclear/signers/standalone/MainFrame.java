@@ -3,11 +3,11 @@ package org.neuclear.signers.standalone;
 import com.jgoodies.plaf.Options;
 import com.l2fprod.common.swing.JTaskPane;
 import com.l2fprod.common.swing.JTaskPaneGroup;
+import com.l2fprod.common.swing.UIUtilities;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.commons.crypto.passphraseagents.swing.KeyStorePanel;
 import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
-import org.neuclear.commons.crypto.signers.BrowsableSigner;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
@@ -181,9 +181,19 @@ public class MainFrame extends JFrame {
 
         });
 
-
+        UIUtilities.centerOnScreen(this);
         setSize(300, 500);
         show();
+        while (!signer.isOpen()) {
+            try {
+                signer.open();
+            } catch (UserCancellationException e) {
+                int choice = JOptionPane.showConfirmDialog(this, "You need to open a Personalities File to continue. Select Yes to Quit or No to open.", "Really Quit", JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION)
+                    System.exit(0);
+
+            }
+        }
 
     }
 
@@ -216,7 +226,7 @@ public class MainFrame extends JFrame {
     private SignDocumentAction signdoc;
     private final Icon webicon = IconTools.loadIcon(StandaloneSigner.class, "org/neuclear/signers/standalone/icons/browser.png");
     private JMenu helpmenu;
-    private BrowsableSigner signer;
+    private PersonalSigner signer;
     public static final Icon ICON_CONTACTS = IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/contacts.png");
     public static final Icon ICON_ASSETS = IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/assets.png");
 }
