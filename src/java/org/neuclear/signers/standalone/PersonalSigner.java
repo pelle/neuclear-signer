@@ -2,7 +2,11 @@ package org.neuclear.signers.standalone;
 
 import org.neuclear.commons.crypto.CryptoException;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
-import org.neuclear.commons.crypto.signers.*;
+import org.neuclear.commons.crypto.passphraseagents.swing.SwingAgent;
+import org.neuclear.commons.crypto.signers.BrowsableSigner;
+import org.neuclear.commons.crypto.signers.InvalidPassphraseException;
+import org.neuclear.commons.crypto.signers.NonExistingSignerException;
+import org.neuclear.commons.crypto.signers.SetPublicKeyCallBack;
 
 import javax.swing.*;
 import java.security.KeyStoreException;
@@ -38,6 +42,7 @@ public class PersonalSigner implements BrowsableSigner {
     public PersonalSigner(JFrame frame) throws UserCancellationException {
 //        signer=null;
         this.frame = frame;
+        this.dia = new OpenSignerDialog(frame, new SwingAgent());
         open();
     }
 
@@ -52,12 +57,7 @@ public class PersonalSigner implements BrowsableSigner {
     }
 
     private void open() throws UserCancellationException {
-        try {
-            signer = new TestCaseSigner();
-        } catch (InvalidPassphraseException e) {
-            e.printStackTrace();
-        }
-
+        signer = dia.openSigner();
     }
 
 
@@ -115,6 +115,7 @@ public class PersonalSigner implements BrowsableSigner {
         return signer.iterator();
     }
 
+    private OpenSignerDialog dia;
     private BrowsableSigner signer;
     private JFrame frame;
 }
