@@ -65,7 +65,7 @@ public class IdentityTreeCellRenderer extends DefaultTreeCellRenderer {
     }
 
     private Icon folderIcon = IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/bookmark_folder.png");
-    private Icon contactIcon = IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/contacts.png");
+    private Icon contactIcon = IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/contact.png");
     private Icon assetIcon = IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset.png");
 
 }

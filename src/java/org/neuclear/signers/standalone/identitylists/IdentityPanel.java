@@ -1,5 +1,6 @@
 package org.neuclear.signers.standalone.identitylists;
 
+import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.id.InvalidNamedObjectException;
 import org.neuclear.id.NameResolutionException;
 import org.neuclear.id.resolver.Resolver;
@@ -37,7 +38,8 @@ public class IdentityPanel extends JPanel {
         this.setLayout(new BorderLayout());
         tree = new IdentityTree(title);
         JToolBar toolbar = new JToolBar();
-        toolbar.add(new JButton("add"));
+        toolbar.add(new JButton(IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/contact_new.png")));
+        toolbar.add(new JButton(IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/contact_remove.png")));
         add(toolbar, BorderLayout.NORTH);
         add(new JScrollPane(tree), BorderLayout.CENTER);
     }
