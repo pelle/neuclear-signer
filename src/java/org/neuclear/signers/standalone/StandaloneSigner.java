@@ -168,7 +168,7 @@ public class StandaloneSigner {
              * Invoked when an action occurs.
              */
             public void actionPerformed(ActionEvent e) {
-                new SplashWindow(frame, Toolkit.getDefaultToolkit().createImage(QuickStart.class.getClassLoader().getResource("neuclearsplash.png"))).show();
+                new SplashWindow(frame, Toolkit.getDefaultToolkit().createImage(QuickStart.class.getClassLoader().getResource("neuclearsplash.jpg"))).show();
             }
 
         });
@@ -253,7 +253,7 @@ public class StandaloneSigner {
         private final JFileChooser chooser;
         private final JFrame frame;
         private final MessageLabel message;
-        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.9 2004/04/16 23:53:52 pelle Exp $";
+        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.10 2004/04/19 18:49:34 pelle Exp $";
 
     }
 }

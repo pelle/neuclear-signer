@@ -9,7 +9,7 @@ import java.awt.*;
  */
 public class QuickStart {
     public static void main(String args[]) {
-        Frame splash = SplashWindow.splash(Toolkit.getDefaultToolkit().createImage(QuickStart.class.getClassLoader().getResource("neuclearsplash.png")));
+        Frame splash = SplashWindow.splash(Toolkit.getDefaultToolkit().createImage(QuickStart.class.getClassLoader().getResource("neuclearsplash.jpg")));
         try {
             Class.forName("org.neuclear.signers.standalone.StandaloneSigner")
                     .getMethod("main", new Class[]{String[].class})
