@@ -103,7 +103,7 @@ public class MainFrame extends JFrame {
         tabbed.addTab("Personalities", IconTools.getPersonalities(), ksPane);
         final JPanel contacts = new JPanel();
         contacts.setLayout(new BorderLayout());
-        final IdentityPanel contactsPanel = new IdentityPanel();
+        final IdentityPanel contactsPanel = new IdentityPanel(this);
         contacts.add(contactsPanel, BorderLayout.CENTER);
 
         actions = contactsPanel.getActions();
@@ -115,7 +115,7 @@ public class MainFrame extends JFrame {
         tabbed.addTab("Contacts", ICON_CONTACTS, contacts);
         final JPanel assets = new JPanel();
         assets.setLayout(new BorderLayout());
-        final AssetPanel assetPanel = new AssetPanel();
+        final AssetPanel assetPanel = new AssetPanel(this);
         assets.add(assetPanel, BorderLayout.CENTER);
         tabbed.addTab("Assets", ICON_ASSETS, assets);
         actions = assetPanel.getActions();

@@ -38,13 +38,14 @@ import java.awt.event.KeyEvent;
  * Time: 1:44:07 PM
  */
 public class RemoveIdentityAction extends NeuClearAction implements TreeSelectionListener {
-    public RemoveIdentityAction(JTree tree) {
-        this(tree, "removecontact", IconTools.loadIcon(RemoveIdentityAction.class, "org/neuclear/signers/standalone/icons/contact_remove.png"));
+    public RemoveIdentityAction(JFrame frame, JTree tree) {
+        this(frame, tree, "removecontact", IconTools.loadIcon(RemoveIdentityAction.class, "org/neuclear/signers/standalone/icons/contact_remove.png"));
     }
 
-    public RemoveIdentityAction(JTree tree, String name, Icon icon) {
+    public RemoveIdentityAction(JFrame frame, JTree tree, String name, Icon icon) {
         super(name, icon);
         this.tree = tree;
+        this.frame = frame;
         putValue(SHORT_DESCRIPTION, caps.getString(name));
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
         this.setEnabled(!tree.isSelectionEmpty());
@@ -53,7 +54,7 @@ public class RemoveIdentityAction extends NeuClearAction implements TreeSelectio
 
     public void actionPerformed(ActionEvent event) {
         MutableTreeNode node = (MutableTreeNode) tree.getSelectionPath().getLastPathComponent();
-        int response = JOptionPane.showConfirmDialog(tree, "Are you sure you want to remove " + node, "Remove item", JOptionPane.YES_NO_OPTION);
+        int response = JOptionPane.showConfirmDialog(frame, "Are you sure you want to remove " + node, "Remove item", JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.YES_OPTION) {
             ((DefaultTreeModel) tree.getModel()).removeNodeFromParent(node);
         }
@@ -71,4 +72,5 @@ public class RemoveIdentityAction extends NeuClearAction implements TreeSelectio
 
     private TreePath selection;
     private final JTree tree;
+    private final JFrame frame;
 }

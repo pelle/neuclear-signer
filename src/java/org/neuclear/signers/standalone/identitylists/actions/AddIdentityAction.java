@@ -39,14 +39,14 @@ import java.awt.event.KeyEvent;
  * Time: 1:44:07 PM
  */
 public class AddIdentityAction extends NeuClearAction implements Runnable {
-    public AddIdentityAction(JTree tree) {
-        this(tree, "addcontact", IconTools.loadIcon(AddIdentityAction.class, "org/neuclear/signers/standalone/icons/contact_new.png"));
-        this.frame = null;
+    public AddIdentityAction(JFrame frame, JTree tree) {
+        this(frame, tree, "addcontact", IconTools.loadIcon(AddIdentityAction.class, "org/neuclear/signers/standalone/icons/contact_new.png"));
     }
 
-    public AddIdentityAction(JTree tree, String name, Icon icon) {
+    public AddIdentityAction(JFrame frame, JTree tree, String name, Icon icon) {
         super(name, icon);
         this.tree = tree;
+        this.frame = frame;
         putValue(SHORT_DESCRIPTION, caps.getString(name));
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
     }

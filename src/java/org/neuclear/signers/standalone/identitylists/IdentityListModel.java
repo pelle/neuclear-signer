@@ -15,6 +15,7 @@ import javax.swing.tree.TreeNode;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /*
  *  The NeuClear Project and it's libraries are
@@ -91,14 +92,16 @@ public class IdentityListModel extends DefaultTreeModel implements ComboBoxModel
     }
 
     public synchronized TreeNode addIdentity(String category, Identity id) {
-        final DefaultMutableTreeNode node = new DefaultMutableTreeNode(id, false);
-        DefaultMutableTreeNode parent = getCategory(category);
+        return addIdentity(getCategory(category), id);
+    }
+
+    public synchronized TreeNode addIdentity(DefaultMutableTreeNode parent, Identity id) {
         final IdentityNode idnode = new IdentityNode(id);
         insertNodeInto(idnode, parent, parent.getChildCount());
         list.add(idnode);
         fireListUpdated();
 //        save();
-        return node;
+        return idnode;
     }
 
     /**
@@ -231,6 +234,14 @@ public class IdentityListModel extends DefaultTreeModel implements ComboBoxModel
         ois.close();
         model.setFile(file);
         model.addAutoSave();
+        return model;
+    }
+
+    public final MutableComboBoxModel getCategoriesModel() {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        Iterator iter = categories.keySet().iterator();
+        while (iter.hasNext())
+            model.addElement(iter.next());
         return model;
     }
 

@@ -17,6 +17,8 @@ import org.neuclear.signers.standalone.identitylists.IdentityNode;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 
 /*
@@ -49,6 +51,7 @@ public class AddIdentityDialog extends ProcessDialog {
         super(frame, id);
         url.addKeyListener(keyValidator);
         url.addActionListener(okAction);
+        categories.addActionListener(okAction);
     }
 
     public AddIdentityDialog(Frame frame) {
@@ -56,7 +59,12 @@ public class AddIdentityDialog extends ProcessDialog {
     }
 
     protected boolean validateForm() {
-        return url.getText().length() > 0;
+        return (url.getText().length() > 0) && (categories.getSelectedItem() != null);
+    }
+
+    protected void clear() {
+        url.setText("");
+        categories.setSelectedItem(null);
     }
 
     protected Component buildPanel() {
@@ -71,43 +79,54 @@ public class AddIdentityDialog extends ProcessDialog {
         builder.addLabel(AgentMessages.getTitle(id + ".url"), cc.xy(1, 1)).setLabelFor(url);
         builder.add(url, cc.xy(3, 1));
         categories = new JComboBox();
+//        categories.setEditable(true);
         builder.addLabel(AgentMessages.getTitle(id + ".categories"), cc.xy(1, 3)).setLabelFor(categories);
         builder.add(categories, cc.xy(3, 3));
 
         return builder.getPanel();
     }
 
+    protected void initializeForm() {
+        url.requestFocus();
+        categories.setSelectedIndex(0);
+    }
+
     public void addContact(JTree tree) throws UserCancellationException {
-        String category;
+        DefaultMutableTreeNode category = null;
+        final IdentityListModel model = (IdentityListModel) tree.getModel();
+        categories.setModel(model.getCategoriesModel());
         if (tree.getSelectionPath() != null) {
             MutableTreeNode node = (MutableTreeNode) tree.getSelectionPath().getLastPathComponent();
             if (node instanceof IdentityNode) {
-                category = ((DefaultMutableTreeNode) node.getParent()).getUserObject().toString();
+                category = (DefaultMutableTreeNode) node.getParent();
             } else if ((node instanceof DefaultMutableTreeNode) && !node.equals(tree.getModel().getRoot())) {
-                category = ((DefaultMutableTreeNode) node).getUserObject().toString();
-            } else {
-                category = "Misc";
+                category = (DefaultMutableTreeNode) node;
             }
-        } else {
-            category = "Misc";
         }
-
+        if (category != null)
+            categories.setSelectedItem(category);
         Identity id = (Identity) openAndWait(new LongChildProcess() {
             public void run() {
                 try {
                     Identity id = Resolver.resolveIdentity(url.getText());
                     setResult(id);
                 } catch (NameResolutionException e) {
-
                     parent.error(e);
                 } catch (InvalidNamedObjectException e) {
                     parent.error(e);
                 }
             }
         });
-        ((IdentityListModel) tree.getModel()).addIdentity(category, id);
-
-
+        TreeNode idnode = model.addIdentity(category, id);
+        Object selected = categories.getSelectedItem();
+        if (selected instanceof DefaultMutableTreeNode)
+            category = (DefaultMutableTreeNode) selected;
+        else
+            category = model.getCategory(selected.toString());
+        final TreePath path = new TreePath(new Object[]{model.getRoot(), category, idnode});
+        tree.setSelectionPath(path);
+        tree.expandPath(path);
+        tree.scrollPathToVisible(path);
     }
 
     private JTextField url;

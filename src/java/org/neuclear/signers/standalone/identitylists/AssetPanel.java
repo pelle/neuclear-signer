@@ -4,6 +4,8 @@ import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
 import org.neuclear.signers.standalone.identitylists.actions.RemoveIdentityAction;
 
+import javax.swing.*;
+
 /*
  *  The NeuClear Project and it's libraries are
  *  (c) 2002-2004 Antilles Software Ventures SA
@@ -30,8 +32,8 @@ import org.neuclear.signers.standalone.identitylists.actions.RemoveIdentityActio
  * Time: 5:26:23 PM
  */
 public class AssetPanel extends IdentityPanel {
-    public AssetPanel() {
-        super("Assets");
+    public AssetPanel(JFrame frame) {
+        super(frame, "Assets");
         IdentityListModel model = (IdentityListModel) tree.getModel();
 //        model.addCategory("Money");
 /*
@@ -53,11 +55,11 @@ public class AssetPanel extends IdentityPanel {
     }
 
     protected AddIdentityAction createAddAction() {
-        return new AddIdentityAction(tree, "addasset", IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset_new.png"));
+        return new AddIdentityAction(frame, tree, "addasset", IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset_new.png"));
     }
 
     protected RemoveIdentityAction createRemoveAction() {
-        return new RemoveIdentityAction(tree, "removeasset", IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset_remove.png"));
+        return new RemoveIdentityAction(frame, tree, "removeasset", IconTools.loadIcon(this.getClass(), "org/neuclear/signers/standalone/icons/asset_remove.png"));
     }
 
     protected void addDefaults() {

@@ -42,7 +42,8 @@ import java.awt.*;
  * Time: 4:40:32 PM
  */
 public class IdentityPanel extends JPanel {
-    public IdentityPanel(String title) {
+    public IdentityPanel(JFrame frame, String title) {
+        this.frame = frame;
         this.setLayout(new BorderLayout());
         tree = new IdentityTree(title);
         JToolBar toolbar = new JToolBar();
@@ -140,15 +141,15 @@ public class IdentityPanel extends JPanel {
     }
 
     protected RemoveIdentityAction createRemoveAction() {
-        return new RemoveIdentityAction(tree);
+        return new RemoveIdentityAction(frame, tree);
     }
 
     protected AddIdentityAction createAddAction() {
-        return new AddIdentityAction(tree);
+        return new AddIdentityAction(frame, tree);
     }
 
-    public IdentityPanel() {
-        this("Identities");
+    public IdentityPanel(JFrame frame) {
+        this(frame, "Identities");
     }
 
     public Action[] getActions() {
@@ -165,4 +166,5 @@ public class IdentityPanel extends JPanel {
     private AddIdentityAction addContact;
     private RemoveIdentityAction removeContact;
     private JEditorPane preview;
+    protected JFrame frame;
 }
