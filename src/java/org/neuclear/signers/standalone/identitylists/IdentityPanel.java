@@ -59,6 +59,7 @@ public class IdentityPanel extends JPanel {
             addDefaults();
         expandTree();
         addContact = createAddAction();
+        tree.setTransferHandler(new ContactTransferHandler(addContact));
         final JButton addButton = new JButton(addContact);
 //        addButton.setText(null);
         addButton.putClientProperty(Options.IS_NARROW_KEY, Boolean.TRUE);

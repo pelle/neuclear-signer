@@ -3,7 +3,7 @@
 
     <name>NeuClear Personal Trader</name>
     <id>neuclear-signer</id>
-    <currentVersion>1.0-beta8</currentVersion>
+    <currentVersion>1.0-beta10</currentVersion>
     <inceptionYear>2003</inceptionYear>
     <package>org.neuclear.signers.standalone</package>
     <logo>/images/logo.gif</logo>
@@ -63,7 +63,7 @@
         <dependency>
             <id>neuclear-xmlsig</id>
             <name>neuclear-xmlsig</name>
-            <version>0.13.1</version>
+            <version>0.13.2</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
@@ -79,7 +79,7 @@
         <dependency>
             <id>neuclear-id</id>
             <name>neuclear-id</name>
-            <version>1.0-beta5</version>
+            <version>1.0-beta7</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
@@ -87,7 +87,7 @@
         <dependency>
             <id>neuclear-commons</id>
             <name>neuclear-commons</name>
-            <version>1.0-beta6</version>
+            <version>1.0-beta8</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>

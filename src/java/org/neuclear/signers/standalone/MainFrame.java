@@ -18,6 +18,7 @@ import org.neuclear.commons.crypto.signers.PersonalSigner;
 import org.neuclear.signers.standalone.identitylists.AssetPanel;
 import org.neuclear.signers.standalone.identitylists.IdentityPanel;
 import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
+import org.neuclear.signers.standalone.signingscreens.PublishAccountAction;
 import org.neuclear.signers.standalone.signingscreens.TransferAction;
 
 import javax.jnlp.BasicService;
@@ -108,6 +109,9 @@ public class MainFrame extends JFrame {
             Action action = actions[i];
             personalityTasks.add(action);
         }
+        ksPane.getList().setTransferHandler(new PublicKeyTransferHandler(signer));
+        ksPane.getList().setDragEnabled(true);
+
         tabbed.addTab(AgentMessages.getText("identities"), IconTools.getPersonalities(), ksPane);
         final JPanel contacts = new JPanel();
         contacts.setLayout(new BorderLayout());
@@ -169,6 +173,9 @@ public class MainFrame extends JFrame {
         JMenuItem signItem = new JMenuItem(signdoc);
         signItem.setIcon(IconTools.getSign());
         menu.add(signItem);
+
+
+        personalityTasks.add(new PublishAccountAction(this, signer, contactsPanel));
 
 
         menu.addSeparator();
