@@ -2,7 +2,6 @@ package org.neuclear.signers.standalone;
 
 import com.jgoodies.plaf.Options;
 import org.dom4j.Document;
-import org.dom4j.io.DOMReader;
 import org.mortbay.http.HttpContext;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHandler;
@@ -15,8 +14,8 @@ import org.neuclear.commons.crypto.signers.BrowsableSigner;
 import org.neuclear.commons.crypto.signers.DefaultSigner;
 import org.neuclear.xml.XMLTools;
 import org.neuclear.xml.xmlsec.EnvelopedSignature;
+import org.neuclear.xml.xmlsec.HTMLSignature;
 import org.neuclear.xml.xmlsec.XMLSignature;
-import org.w3c.tidy.Tidy;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
@@ -222,16 +221,15 @@ public class StandaloneSigner {
                 final File file = chooser.getSelectedFile();
                 Document doc;
                 if (file.getName().endsWith(".html") || file.getName().endsWith(".html")) {
-                    Tidy tidy = new Tidy();
-                    tidy.setXmlOut(true);
                     InputStream is = new BufferedInputStream(new FileInputStream(file));
-                    org.w3c.dom.Document dom = tidy.parseDOM(is, null);
-                    DOMReader reader = new DOMReader();
-                    doc = reader.read(dom);
-                } else
+                    message.info("Signing " + chooser.getSelectedFile().getName());
+                    XMLSignature sig = new HTMLSignature(signer, is);
+                    doc = sig.getElement().getDocument();
+                } else {
                     doc = XMLTools.loadDocument(file);
-                message.info("Signing " + chooser.getSelectedFile().getName());
-                XMLSignature sig = new EnvelopedSignature(signer, doc.getRootElement());
+                    message.info("Signing " + chooser.getSelectedFile().getName());
+                    new EnvelopedSignature(signer, doc.getRootElement());
+                }
                 chooser.setDialogTitle("Save signed XML Document");
                 result = chooser.showSaveDialog(frame);
                 if (result == JFileChooser.CANCEL_OPTION) {
@@ -255,7 +253,7 @@ public class StandaloneSigner {
         private final JFileChooser chooser;
         private final JFrame frame;
         private final MessageLabel message;
-        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.8 2004/04/15 23:58:54 pelle Exp $";
+        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.9 2004/04/16 23:53:52 pelle Exp $";
 
     }
 }
