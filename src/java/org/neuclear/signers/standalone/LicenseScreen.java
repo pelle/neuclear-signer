@@ -16,8 +16,11 @@ import java.net.URL;
 import java.util.prefs.Preferences;
 
 /*
-$Id: LicenseScreen.java,v 1.1 2004/04/15 20:03:26 pelle Exp $
+$Id: LicenseScreen.java,v 1.2 2004/04/21 23:04:36 pelle Exp $
 $Log: LicenseScreen.java,v $
+Revision 1.2  2004/04/21 23:04:36  pelle
+Fixed mac look and feel
+
 Revision 1.1  2004/04/15 20:03:26  pelle
 Added license screen to Personal Signer.
 Added Sign document menu to  Personal Signer.
@@ -38,8 +41,12 @@ public class LicenseScreen {
         }
 
         try {
-            UIManager.setLookAndFeel("com.jgoodies.plaf.plastic.PlasticXPLookAndFeel");
-            UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
+            if (UIManager.getSystemLookAndFeelClassName().equals("apple.laf.AquaLookAndFeel"))
+                System.setProperty("com.apple.laf.useScreenMenuBar", "true");
+            else {
+                UIManager.setLookAndFeel("com.jgoodies.plaf.plastic.PlasticXPLookAndFeel");
+                UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
+            }
         } catch (Exception e) {
             // Likely PlasticXP is not in the class path; ignore.
         }

@@ -38,6 +38,9 @@ import java.net.URL;
  */
 public class StandaloneSigner {
     public static void main(String args[]) {
+        System.setProperty("com.apple.macos.useScreenMenuBar", "true");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "NeuClear Signer");
+
 //        Frame splash=SplashWindow.splash(Toolkit.getDefaultToolkit().createImage(StandaloneSigner.class.getClassLoader().getResource("neuclearsplash.png")));
         if (!LicenseScreen.accept())
             System.exit(0);
@@ -75,8 +78,10 @@ public class StandaloneSigner {
 
     public static JFrame createFrame(final DefaultSigner signer) {
         try {
-            UIManager.setLookAndFeel("com.jgoodies.plaf.plastic.PlasticXPLookAndFeel");
-            UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
+            if (!UIManager.getSystemLookAndFeelClassName().equals("apple.laf.AquaLookAndFeel")) {
+                UIManager.setLookAndFeel("com.jgoodies.plaf.plastic.PlasticXPLookAndFeel");
+                UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
+            }
         } catch (Exception e) {
             // Likely PlasticXP is not in the class path; ignore.
         }
@@ -253,7 +258,7 @@ public class StandaloneSigner {
         private final JFileChooser chooser;
         private final JFrame frame;
         private final MessageLabel message;
-        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.10 2004/04/19 18:49:34 pelle Exp $";
+        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.11 2004/04/21 23:04:52 pelle Exp $";
 
     }
 }
