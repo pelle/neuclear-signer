@@ -190,7 +190,20 @@
                 <exclude>**/Abstract*Test.java</exclude>
             </excludes>
         </unitTest>
-
+        <resources>
+            <resource>
+                <directory>
+                src/java
+                </directory>
+                <includes>*.png</includes>
+                <includes>*.gif</includes>
+                <includes>*.jpg</includes>
+                <includes>*.jks</includes>
+                <includes>*.xml</includes>
+                <includes>*.properties</includes>
+                <excludes>*.java</excludes>
+            </resource>
+        </resources>
     </build>
 </project>
 
