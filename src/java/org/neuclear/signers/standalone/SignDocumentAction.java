@@ -61,11 +61,11 @@ public class SignDocumentAction extends SignerAction implements Runnable {
             chooser.setFileFilter(new FileFilter() {
                 public boolean accept(File file) {
                     String filename = file.getName();
-                    return file.isDirectory() || filename.endsWith(".xml") || filename.endsWith(".html") || filename.endsWith(".htm");
+                    return file.isDirectory() || filename.endsWith(".xml") || filename.endsWith(".html") || filename.endsWith(".htm") || filename.endsWith(".xhtml");
                 }
 
                 public String getDescription() {
-                    return "XML Files";
+                    return "XML/HTML Files";
                 }
             });
         }
@@ -80,7 +80,7 @@ public class SignDocumentAction extends SignerAction implements Runnable {
 
     public void run() {
         parent.setEnabled(false);
-        chooser.setDialogTitle("Select XML file to sign...");
+        chooser.setDialogTitle("Select XML or HTML file to sign...");
         chooser.setCurrentDirectory(new File(prefs.get("LASTDIR", System.getProperty("user.home"))));
         int result = chooser.showOpenDialog(parent);
         if (result == JFileChooser.CANCEL_OPTION) {
@@ -93,7 +93,8 @@ public class SignDocumentAction extends SignerAction implements Runnable {
 //            message.info("Parsing " + chooser.getSelectedFile().getName());
             final File file = chooser.getSelectedFile();
             Document doc;
-            if (file.getName().endsWith(".html") || file.getName().endsWith(".html")) {
+            System.out.println("Encoding " + System.getProperty("file.encoding"));
+            if (file.getName().endsWith(".html") || file.getName().endsWith(".htm")) {
                 InputStream is = new BufferedInputStream(new FileInputStream(file));
 //                message.info("Signing " + chooser.getSelectedFile().getName());
                 XMLSignature sig = new HTMLSignature(signer, is);

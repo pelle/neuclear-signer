@@ -33,7 +33,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Locale;
 
 /*
  *  The NeuClear Project and it's libraries are
@@ -144,6 +143,8 @@ public class MainFrame extends JFrame {
             if (action instanceof AddIdentityAction)
                 addAsset = (AddIdentityAction) action;
         }
+        CryptoTools.ensureProvider();
+
 
         JTaskPaneGroup signingTasks = new JTaskPaneGroup();
         signingTasks.setIcon(IconTools.getSign());
@@ -172,13 +173,13 @@ public class MainFrame extends JFrame {
         JMenu langMenu = new JMenu(Messages.getText("language"));
         menu.add(langMenu);
         final ButtonGroup langGroup = new ButtonGroup();
-        final JRadioButtonMenuItem enItem = new JRadioButtonMenuItem(new SelectLanguageAction(this, "es"));
-        langGroup.add(enItem);
-        langMenu.add(enItem);
-        final JRadioButtonMenuItem esItem = new JRadioButtonMenuItem(new SelectLanguageAction(this, "en"));
+        final JRadioButtonMenuItem esItem = new JRadioButtonMenuItem(new SelectLanguageAction(this, "es"));
         langGroup.add(esItem);
         langMenu.add(esItem);
-        if (Locale.getDefault().getLanguage().equals("es")) {
+        final JRadioButtonMenuItem enItem = new JRadioButtonMenuItem(new SelectLanguageAction(this, "en"));
+        langGroup.add(enItem);
+        langMenu.add(enItem);
+        if (Messages.getLocale().getLanguage().equals("es")) {
             esItem.setSelected(true);
         } else {
             enItem.setSelected(true);
@@ -265,16 +266,16 @@ public class MainFrame extends JFrame {
             }
 
         });
+        server = new SigningServer(signer, message, addId, addAsset);
+        server.start();
 
         placeWindow();
         show();
         setEnabled(false);
-        CryptoTools.ensureProvider();
-        server = new SigningServer(signer, message, addId, addAsset);
-        server.start();
         if (splash != null)
             splash.dispose();
         toFront();
+        server.waitForStart();
         while (!signer.isOpen()) {
             try {
                 signer.open();
@@ -287,6 +288,7 @@ public class MainFrame extends JFrame {
             }
         }
         setEnabled(true);
+
 
     }
 

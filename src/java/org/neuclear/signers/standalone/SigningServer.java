@@ -9,6 +9,8 @@ import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.BrowsableSigner;
 import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
 
+import javax.swing.*;
+
 /*
  *  The NeuClear Project and it's libraries are
  *  (c) 2002-2004 Antilles Software Ventures SA
@@ -56,40 +58,53 @@ public class SigningServer extends Thread {
     }
 
     public void run() {
-        try {
-            server.start();
-            context.start();
-            handler.start();
-            handler.initializeServlets();
-            ServletHolder[] holders = handler.getServlets();
-            for (int i = 0; i < holders.length; i++) {
-                ServletHolder holder = holders[i];
-                if (holder.getServlet() instanceof StandaloneSigningServlet) {
-//                    System.out.println("Found servlet: "+holder.getName());
-                    if (!holder.isStarted())
-                        holder.start();
-                    ((StandaloneSigningServlet) holder.getServlet()).setSigner(signer);
-                    ((StandaloneSigningServlet) holder.getServlet()).setMessage(messages);
-                } else if (holder.getName().equals("addcontact")) {
-                    if (!holder.isStarted())
-                        holder.start();
-                    ((AddContactServlet) holder.getServlet()).setAddIdentityAction(addId);
-                } else if (holder.getName().equals("addasset")) {
-                    if (!holder.isStarted())
-                        holder.start();
-                    ((AddContactServlet) holder.getServlet()).setAddIdentityAction(addAsset);
+        synchronized (this) {
+            try {
+                server.start();
+                context.start();
+                handler.start();
+                handler.initializeServlets();
+                ServletHolder[] holders = handler.getServlets();
+                for (int i = 0; i < holders.length; i++) {
+                    ServletHolder holder = holders[i];
+                    if (holder.getServlet() instanceof StandaloneSigningServlet) {
+                        //                    System.out.println("Found servlet: "+holder.getName());
+                        if (!holder.isStarted())
+                            holder.start();
+                        ((StandaloneSigningServlet) holder.getServlet()).setSigner(signer);
+                        ((StandaloneSigningServlet) holder.getServlet()).setMessage(messages);
+                    } else if (holder.getName().equals("addcontact")) {
+                        if (!holder.isStarted())
+                            holder.start();
+                        ((AddContactServlet) holder.getServlet()).setAddIdentityAction(addId);
+                    } else if (holder.getName().equals("addasset")) {
+                        if (!holder.isStarted())
+                            holder.start();
+                        ((AddContactServlet) holder.getServlet()).setAddIdentityAction(addAsset);
 
+
+                    }
 
                 }
-
+                isStarted = true;
+                messages.info("Signing Servlet Started");
+                this.notifyAll();
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(messages, "The Personal Trader is already running. We will now exit.", "Already Running", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
             }
-            messages.info("Signing Servlet Started");
-        } catch (Exception e) {
-            e.printStackTrace();
-            messages.error(e);
         }
     }
 
+    public boolean waitForStart() {
+
+        synchronized (this) {
+            return isStarted;
+        }
+    }
+
+    private boolean isStarted = false;
     private final MessageLabel messages;
     private final BrowsableSigner signer;
     private HttpContext context;
