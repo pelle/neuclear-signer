@@ -76,18 +76,25 @@ public class AddContactServlet extends HttpServlet {
             out.println("No Account Page");
             return;
         }
+        final String referrer = request.getHeader("Referer");
+
+        out.print("Attempting to do Add <a href=\"");
+        out.print(contacturl);
+        out.print("\">");
+        out.print(contacturl);
+        out.println("</a> to your Contacts. If you can't see your window have a look around to see if it is behind your browser.");
         out.flush();
         try {
             action.webAddContact(contacturl);
         } catch (UserCancellationException e) {
-            out.println("Cancelled");
+            out.print("Cancelled<br/><a href=\"");
+            out.print(referrer);
+            out.println("\">Click to go back</a>");
             return;
         }
-        out.println("Added <a href=\"");
-        out.println(contacturl);
-        out.println(">");
-        out.println(contacturl);
-        out.println("</a>");
+        out.println("Added<br/><a href=\"");
+        out.print(referrer);
+        out.println("\">Click to go back</a>");
         return;
     }
 

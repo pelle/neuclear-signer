@@ -187,17 +187,25 @@ public class MainFrame extends JFrame {
             }
 
         });
+        JMenu directory = new JMenu("Directory");
+        directory.setMnemonic(KeyEvent.VK_D);
+        directory.add(createWebMenuItem("Search Yellow Pages", "http://pkyp.org", message));
+        directory.add(createWebMenuItem("Submit Page to Yellow Pages", "http://pkyp.org/submit.jsp", message));
+
+        menubar.add(directory);
+
         helpmenu = new JMenu("Help");
         helpmenu.setMnemonic(KeyEvent.VK_H);
         menubar.add(helpmenu);
 
-        createWebMenuItem("NeuClear Site", "http://neuclear.org", message);
-        createWebMenuItem("The Two-Minute NeuClear Tour", "http://neuclear.org/display/neu/The+Two-Minute+NeuClear+Tour", message);
+        createWebHelpMenuItem("Personal Trader Help", "http://neuclear.org/display/neu/Personal+Trader", message);
+        createWebHelpMenuItem("NeuClear Site", "http://neuclear.org", message);
+        createWebHelpMenuItem("The Two-Minute NeuClear Tour", "http://neuclear.org/display/neu/The+Two-Minute+NeuClear+Tour", message);
         helpmenu.addSeparator();
-        createWebMenuItem("Road Map", "http://jira.neuclear.org/secure/BrowseProject.jspa?id=10030&report=roadmap", message);
-        createWebMenuItem("Report Bug or Suggest Feature", "http://jira.neuclear.org/secure/CreateIssue!default.jspa", message);
+//        createWebHelpMenuItem("Road Map", "http://jira.neuclear.org/secure/BrowseProject.jspa?id=10030&report=roadmap", message);
+        createWebHelpMenuItem("Report Bug or Suggest Feature", "http://jira.neuclear.org/secure/CreateIssue!default.jspa", message);
         helpmenu.addSeparator();
-        createWebMenuItem("Developers Blog", "http://talk.org", message);
+        createWebHelpMenuItem("Developers Blog", "http://talk.org", message);
         helpmenu.addSeparator();
         JMenuItem about = new JMenuItem("About");
         about.setMnemonic(KeyEvent.VK_A);
@@ -264,7 +272,12 @@ public class MainFrame extends JFrame {
                 (screenDim.height - getHeight()) - 25);
     }
 
-    private void createWebMenuItem(final String title, final String url, final MessageLabel message) {
+    private void createWebHelpMenuItem(final String title, final String url, final MessageLabel message) {
+        JMenuItem item = createWebMenuItem(title, url, message);
+        helpmenu.add(item);
+    }
+
+    private JMenuItem createWebMenuItem(final String title, final String url, final MessageLabel message) {
         final JMenuItem item = new JMenuItem(title);
         item.setIcon(webicon);
 
@@ -283,7 +296,7 @@ public class MainFrame extends JFrame {
             }
 
         });
-        helpmenu.add(item);
+        return item;
     }
 
     public static void main(String args[]) {
