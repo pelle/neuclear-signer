@@ -4,11 +4,15 @@ import com.jgoodies.plaf.Options;
 import com.l2fprod.common.swing.JTaskPane;
 import com.l2fprod.common.swing.JTaskPaneGroup;
 import com.l2fprod.common.swing.UIUtilities;
+import org.neuclear.asset.contracts.AssetGlobals;
+import org.neuclear.commons.crypto.CryptoTools;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.commons.crypto.passphraseagents.swing.KeyStorePanel;
 import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.PersonalSigner;
+import org.neuclear.signers.standalone.identitylists.AssetPanel;
+import org.neuclear.signers.standalone.identitylists.IdentityPanel;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
@@ -58,6 +62,7 @@ public class MainFrame extends JFrame {
             // Likely PlasticXP is not in the class path; ignore.
         }
         setTitle("NeuClear Trader");
+        AssetGlobals.registerReaders();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setIconImage(IconTools.getLogo().getImage());
         signer = new PersonalSigner(this);
@@ -99,20 +104,11 @@ public class MainFrame extends JFrame {
         tabbed.addTab("Personalities", IconTools.getPersonalities(), ksPane);
         final JPanel contacts = new JPanel();
         contacts.setLayout(new BorderLayout());
-        contacts.add(new JTable(new Object[][]{
-            {"Bob"},
-            {"Mom"},
-            {"Carol"},
-            {"Guillermo"}
-        }, new String[]{"Contact"}), BorderLayout.CENTER);
+        contacts.add(new IdentityPanel(), BorderLayout.CENTER);
         tabbed.addTab("Contacts", ICON_CONTACTS, contacts);
         final JPanel assets = new JPanel();
         assets.setLayout(new BorderLayout());
-        assets.add(new JTable(new Object[][]{
-            {"VERAX Beta", new Double(1023)},
-            {"NeuClear Bux", new Double(543)},
-            {"Spike Sneakers", new Double(5000)}
-        }, new String[]{"Asset", "Balance"}), BorderLayout.CENTER);
+        assets.add(new AssetPanel(), BorderLayout.CENTER);
         tabbed.addTab("Assets", ICON_ASSETS, assets);
 
 
@@ -184,6 +180,9 @@ public class MainFrame extends JFrame {
         UIUtilities.centerOnScreen(this);
         setSize(300, 500);
         show();
+        CryptoTools.ensureProvider();
+        server = new SigningServer(signer, message);
+        server.start();
         while (!signer.isOpen()) {
             try {
                 signer.open();
@@ -224,6 +223,7 @@ public class MainFrame extends JFrame {
         final MainFrame main = new MainFrame();
     }
 
+    private final SigningServer server;
     private SignDocumentAction signdoc;
     private final Icon webicon = IconTools.loadIcon(StandaloneSigner.class, "org/neuclear/signers/standalone/icons/browser.png");
     private JMenu helpmenu;

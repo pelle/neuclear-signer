@@ -1,10 +1,8 @@
 package org.neuclear.signers.standalone;
 
-import org.neuclear.commons.crypto.passphraseagents.InteractiveAgent;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
-import org.neuclear.commons.crypto.passphraseagents.swing.SwingAgent;
+import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.BrowsableSigner;
-import org.neuclear.commons.crypto.signers.DefaultSigner;
 import org.neuclear.commons.servlets.ServletTools;
 import org.neuclear.id.signers.SigningServlet;
 
@@ -23,12 +21,9 @@ import java.io.PrintWriter;
  * To change this template use Options | File Templates.
  */
 public class StandaloneSigningServlet extends SigningServlet {
-    public StandaloneSigningServlet() {
-        this.agent = new SwingAgent();
-    }
 
     protected BrowsableSigner createSigner(ServletConfig config) throws UserCancellationException {
-        return new DefaultSigner(agent);
+        return getSigner();
     }
 
     protected String getTitle() {
@@ -45,6 +40,26 @@ public class StandaloneSigningServlet extends SigningServlet {
         return super.getSigner();
     }
 
+    public void setSigner(BrowsableSigner signer) {
+        super.setSigner(signer);
+    }
+
+    public void setMessage(MessageLabel message) {
+        this.message = message;
+    }
+
+    /**
+     * Return True when ready to sign.
+     * Multirequest signers, need to verify that the correct request parameters are available.
+     *
+     * @param request
+     * @return
+     */
+    protected boolean isReadyToSign(HttpServletRequest request) {
+        message.info("Incoming Signature Request");
+        return super.isReadyToSign(request);
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter writer = response.getWriter();
@@ -53,6 +68,6 @@ public class StandaloneSigningServlet extends SigningServlet {
     }
 
 
-    private final InteractiveAgent agent;
+    private MessageLabel message;
 
 }
