@@ -15,6 +15,7 @@ import org.neuclear.commons.crypto.passphraseagents.swing.KeyStorePanel;
 import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.PersonalSigner;
 import org.neuclear.commons.swing.Messages;
+import org.neuclear.commons.swing.SelectLanguageAction;
 import org.neuclear.signers.standalone.identitylists.AssetPanel;
 import org.neuclear.signers.standalone.identitylists.IdentityPanel;
 import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
@@ -32,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Locale;
 
 /*
  *  The NeuClear Project and it's libraries are
@@ -74,7 +76,7 @@ public class MainFrame extends JFrame {
         } catch (Exception e) {
             // Likely PlasticXP is not in the class path; ignore.
         }
-        Messages.updateLocale("es");
+//        Messages.updateLocale("es");
         setTitle(Messages.getText("personalsigner"));
         AssetGlobals.registerReaders();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -165,6 +167,21 @@ public class MainFrame extends JFrame {
         for (int i = 0; i < fileactions.length; i++) {
             menu.add(fileactions[i]);
 
+        }
+        menu.addSeparator();
+        JMenu langMenu = new JMenu(Messages.getText("language"));
+        menu.add(langMenu);
+        final ButtonGroup langGroup = new ButtonGroup();
+        final JRadioButtonMenuItem enItem = new JRadioButtonMenuItem(new SelectLanguageAction(this, "es"));
+        langGroup.add(enItem);
+        langMenu.add(enItem);
+        final JRadioButtonMenuItem esItem = new JRadioButtonMenuItem(new SelectLanguageAction(this, "en"));
+        langGroup.add(esItem);
+        langMenu.add(esItem);
+        if (Locale.getDefault().getLanguage().equals("es")) {
+            esItem.setSelected(true);
+        } else {
+            enItem.setSelected(true);
         }
         menu.addSeparator();
         TransferAction maketransfer = new TransferAction(this, signer, assetPanel, contactsPanel);
