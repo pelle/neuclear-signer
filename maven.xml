@@ -1,0 +1,20 @@
+<project default="war:war"
+    xmlns:j="jelly:core">
+    <postGoal name="war:webapp">
+        <attainGoal name="jnlp:generate-jnlp"/>
+        <mkdir dir="${maven.war.webapp.dir}/app"/>
+        <copy
+            todir="${maven.war.webapp.dir}/app"
+            overwrite="true"
+            >
+            <fileset dir="${maven.jnlp.dir}">
+                <include name="*.jar"/>
+                <include name="*.jnlp"/>
+            </fileset>
+
+        </copy>
+        <copy file="${basedir}/src/java/neuclearsplash.jpg"
+            todir="${maven.war.webapp.dir}/images"
+            overwrite="true"/>
+    </postGoal>
+</project>
