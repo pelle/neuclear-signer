@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<project>
+
+    <name>NeuClear Identity Personal Signer</name>
+    <id>neuclear-signer</id>
+    <currentVersion>0.1-SNAPSHOT</currentVersion>
+    <inceptionYear>2003</inceptionYear>
+    <package>org.neuclear.signers.standalone</package>
+    <logo>/images/logo.gif</logo>
+    <shortDescription>NeuClear Standalone Signer</shortDescription>
+    <organization>
+        <name>Antilles Software Ventures SA</name>
+        <url>http://talk.org/</url>
+    </organization>
+    <description>
+	Standalone Signing web app for NeuClear
+    </description>
+
+    <url>http://neuclear.org/id/</url>
+    <repository>
+        <connection>
+         scm:cvs:pserver:anonymous@cvs.neuclear.sourceforge.net:/cvsroot/neuclear:neuclear-signer
+        </connection>
+        <url>
+      http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/neuclear/neuclear-signer/
+        </url>
+    </repository>
+
+    <siteAddress>neuclear.org/signer/</siteAddress>
+    <siteDirectory>/home/sites/neuclear.org/public_html/signer/</siteDirectory>
+    <issueTrackingUrl>http://jira.neuclear.org:9090/</issueTrackingUrl>
+    <mailingLists>
+        <mailingList>
+            <name>NeuClear Announce</name>
+            <subscribe>http://lists.sourceforge.net/lists/listinfo/neuclear-announce</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/lists/listinfo/neuclear-announce</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=neuclear-announce</archive>
+        </mailingList>
+        <mailingList>
+            <name>NeuClear General</name>
+            <subscribe>http://lists.sourceforge.net/lists/listinfo/neuclear-general</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/lists/listinfo/neuclear-general</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=neuclear-general</archive>
+        </mailingList>
+        <mailingList>
+            <name>NeuClear Develop</name>
+            <subscribe>http://lists.sourceforge.net/lists/listinfo/neuclear-develop</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/lists/listinfo/neuclear-develop</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=neuclear-develop</archive>
+        </mailingList>
+    </mailingLists>
+
+    <developers>
+        <developer>
+            <name>Pelle Braendgaard</name>
+            <id>pelle</id>
+            <email>pelle@neubia.com</email>
+            <organization>Antilles Software Ventures SA</organization>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <id>neuclear-xmlsig</id>
+            <name>neuclear-xmlsig</name>
+            <version>0.11</version>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <id>neuclear-id</id>
+            <name>neuclear-id</name>
+            <version>0.8.1-SNAPSHOT</version>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <id>neuclear-commons</id>
+            <name>neuclear-commons</name>
+            <version>0.5.1-SNAPSHOT</version>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+
+        <dependency>
+            <id>dom4j</id>
+            <version>1.4</version>
+            <jar>dom4j-1.4.jar</jar>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <id>bouncycastle</id>
+            <name>bouncycastle</name>
+            <version>120</version>
+            <jar>bcprov-jdk14-120.jar</jar>
+            <properties>
+                <war.bundle>false</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <id>servletapi</id>
+            <name>servletapi</name>
+            <version>2.3</version>
+        </dependency>
+        <dependency>
+            <id>waterken-adt</id>
+            <version>2.0-beta13</version>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+    </dependencies>
+    <build>
+        <sourceDirectory>src/java</sourceDirectory>
+    </build>
+</project>
+
