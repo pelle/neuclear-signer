@@ -27,10 +27,10 @@ public class StandaloneSigner {
             handler.addServlet("/Signer","org.neuclear.signers.standalone.StandaloneSigningServlet");
             context.addHandler(handler);
             server.start();
-
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use Options | File Templates.
-        } catch (MultiException e) {
+            context.start();
+            handler.start();
+            handler.initializeServlets();
+        } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use Options | File Templates.
         }
 
