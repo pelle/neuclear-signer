@@ -126,7 +126,7 @@
        <dependency>
             <id>commons-cli</id>
             <name>commons-cli</name>
-            <version>1.0-beta-2</version>
+            <version>1.0</version>
         </dependency>
     </dependencies>
     <build>

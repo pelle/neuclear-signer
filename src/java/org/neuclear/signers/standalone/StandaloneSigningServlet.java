@@ -34,7 +34,7 @@ public class StandaloneSigningServlet extends SigningServlet {
         this.agent = new GuiDialogAgent();
     }
 
-    protected Signer createSigner(ServletConfig config) throws CryptoException {
+    protected Signer createSigner(ServletConfig config) throws UserCancellationException {
         try {
             return new DefaultSigner(agent);
         } catch (InvalidPassphraseException e) {
