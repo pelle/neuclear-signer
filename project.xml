@@ -3,7 +3,7 @@
 
     <name>NeuClear Identity Personal Signer</name>
     <id>neuclear-signer</id>
-    <currentVersion>0.8.1</currentVersion>
+    <currentVersion>0.9-SNAPSHOT</currentVersion>
     <inceptionYear>2003</inceptionYear>
     <package>org.neuclear.signers.standalone</package>
     <logo>/images/logo.gif</logo>
@@ -63,7 +63,7 @@
         <dependency>
             <id>neuclear-xmlsig</id>
             <name>neuclear-xmlsig</name>
-            <version>0.11.1</version>
+            <version>0.12</version>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -71,7 +71,7 @@
         <dependency>
             <id>neuclear-id</id>
             <name>neuclear-id</name>
-            <version>0.8.1</version>
+            <version>0.9-SNAPSHOT</version>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -79,7 +79,7 @@
         <dependency>
             <id>neuclear-commons</id>
             <name>neuclear-commons</name>
-            <version>0.5.1</version>
+            <version>0.6.1-SNAPSHOT</version>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
@@ -123,7 +123,7 @@
             <id>jline</id>
             <version>0.8.1</version>
         </dependency>
-       <dependency>
+        <dependency>
             <id>commons-cli</id>
             <name>commons-cli</name>
             <version>1.0</version>
