@@ -3,7 +3,7 @@
 
     <name>NeuClear Identity Personal Signer</name>
     <id>neuclear-signer</id>
-    <currentVersion>0.1-SNAPSHOT</currentVersion>
+    <currentVersion>0.8.1-SNAPSHOT</currentVersion>
     <inceptionYear>2003</inceptionYear>
     <package>org.neuclear.signers.standalone</package>
     <logo>/images/logo.gif</logo>
@@ -16,7 +16,7 @@
 	Standalone Signing web app for NeuClear
     </description>
 
-    <url>http://neuclear.org/id/</url>
+    <url>http://neuclear.org/signer/</url>
     <repository>
         <connection>
          scm:cvs:pserver:anonymous@cvs.neuclear.sourceforge.net:/cvsroot/neuclear:neuclear-signer
@@ -84,7 +84,12 @@
                 <war.bundle>true</war.bundle>
             </properties>
         </dependency>
-
+        <dependency>
+            <id>jetty</id>
+            <name>jetty</name>
+            <version>4.2.14</version>
+            <jar>org.mortbay.jetty-4.2.14.jar</jar>
+        </dependency>
         <dependency>
             <id>dom4j</id>
             <version>1.4</version>
