@@ -119,6 +119,15 @@
                 <war.bundle>true</war.bundle>
             </properties>
         </dependency>
+        <dependency>
+            <id>jline</id>
+            <version>0.8.1</version>
+        </dependency>
+       <dependency>
+            <id>commons-cli</id>
+            <name>commons-cli</name>
+            <version>1.0-beta-2</version>
+        </dependency>
     </dependencies>
     <build>
         <!--    <sourceDirectories>-->

@@ -3,7 +3,11 @@ package org.neuclear.signers.standalone;
 import org.neuclear.signers.servlet.SigningServlet;
 import org.neuclear.commons.crypto.signers.Signer;
 import org.neuclear.commons.crypto.signers.DefaultSigner;
+import org.neuclear.commons.crypto.signers.InvalidPassphraseException;
 import org.neuclear.commons.crypto.passphraseagents.GuiDialogAgent;
+import org.neuclear.commons.crypto.passphraseagents.InteractiveAgent;
+import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
+import org.neuclear.commons.crypto.CryptoException;
 import org.neuclear.commons.NeuClearException;
 import org.neuclear.commons.Utility;
 import org.neuclear.commons.servlets.ServletTools;
@@ -26,15 +30,23 @@ import java.io.PrintWriter;
  * To change this template use Options | File Templates.
  */
 public class StandaloneSigningServlet extends SigningServlet {
-    protected Signer createSigner(ServletConfig config) throws GeneralSecurityException, NeuClearException, IOException {
-        return new DefaultSigner(new GuiDialogAgent());
+    public StandaloneSigningServlet() {
+        this.agent = new GuiDialogAgent();
+    }
+
+    protected Signer createSigner(ServletConfig config) throws CryptoException {
+        try {
+            return new DefaultSigner(agent);
+        } catch (InvalidPassphraseException e) {
+            return createSigner(config);
+        }
     }
 
     protected String getTitle(){
         return "NeuClear Personal Signing Service";
     }
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
-        if(!request.getRemoteAddr().equals("127.0.0.1"))
+        if(!request.getRemoteAddr().equals("127.0.0.2"))
             ((HttpServletResponse)response).sendError(500,"No external access allowed");
         super.service(request, response);
     }
@@ -45,4 +57,6 @@ public class StandaloneSigningServlet extends SigningServlet {
         ServletTools.printHeader(writer, request,"NeuClear Signing Servlet");
 
     }
+    private final InteractiveAgent agent;
+
 }
