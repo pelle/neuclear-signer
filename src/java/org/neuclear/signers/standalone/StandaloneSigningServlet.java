@@ -50,6 +50,14 @@ public class StandaloneSigningServlet extends SigningServlet {
         this.message = message;
     }
 
+    protected void info(String message) {
+        this.message.info(message);
+    }
+
+    protected void error(Throwable e) {
+        message.error((Exception) e);
+    }
+
     /**
      * Return True when ready to sign.
      * Multirequest signers, need to verify that the correct request parameters are available.
@@ -58,7 +66,7 @@ public class StandaloneSigningServlet extends SigningServlet {
      * @return
      */
     protected boolean isReadyToSign(HttpServletRequest request) {
-        message.info("Incoming Signature Request");
+        info("Incoming Signature Request");
         return super.isReadyToSign(request);
     }
 
