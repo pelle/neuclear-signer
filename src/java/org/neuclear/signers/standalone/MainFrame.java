@@ -8,6 +8,7 @@ import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.commons.crypto.passphraseagents.swing.KeyStorePanel;
 import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
+import org.neuclear.commons.crypto.signers.PersonalSigner;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
@@ -59,12 +60,7 @@ public class MainFrame extends JFrame {
         setTitle("NeuClear Trader");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setIconImage(IconTools.getLogo().getImage());
-        try {
-            signer = new PersonalSigner(this);
-        } catch (UserCancellationException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        signer = new PersonalSigner(this);
         Container content = getContentPane();
         content.setLayout(new BorderLayout());
         JTaskPane taskpane = new JTaskPane();
@@ -99,7 +95,6 @@ public class MainFrame extends JFrame {
         for (int i = 0; i < actions.length; i++) {
             Action action = actions[i];
             personalityTasks.add(action);
-
         }
         tabbed.addTab("Personalities", IconTools.getPersonalities(), ksPane);
         final JPanel contacts = new JPanel();
@@ -130,7 +125,12 @@ public class MainFrame extends JFrame {
         JMenu menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_F);
         menubar.add(menu);
+        Action[] fileactions = ksPane.getFileActions();
+        for (int i = 0; i < fileactions.length; i++) {
+            menu.add(fileactions[i]);
 
+        }
+        menu.addSeparator();
         signdoc = new SignDocumentAction(signer);
         signingTasks.add(signdoc);
         JMenuItem signItem = new JMenuItem(signdoc);
@@ -188,8 +188,9 @@ public class MainFrame extends JFrame {
             try {
                 signer.open();
             } catch (UserCancellationException e) {
-                int choice = JOptionPane.showConfirmDialog(this, "You need to open a Personalities File to continue. Select Yes to Quit or No to open.", "Really Quit", JOptionPane.YES_NO_OPTION);
-                if (choice == JOptionPane.YES_OPTION)
+                int choice = JOptionPane.showOptionDialog(this, "You need to open a Personalities File to start NeuClear Trader.",
+                        "Really Quit", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, QUIT_OPTIONS, QUIT_OPTIONS[1]);
+                if (choice == JOptionPane.NO_OPTION) // Yeah I know it doesnt make sense
                     System.exit(0);
 
             }
@@ -229,4 +230,5 @@ public class MainFrame extends JFrame {
     private PersonalSigner signer;
     public static final Icon ICON_CONTACTS = IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/contacts.png");
     public static final Icon ICON_ASSETS = IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/assets.png");
+    public static final String[] QUIT_OPTIONS = new String[]{"Try again", "Quit"};
 }
