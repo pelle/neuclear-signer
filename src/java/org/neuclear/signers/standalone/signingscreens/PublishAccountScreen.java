@@ -24,10 +24,10 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import org.neuclear.commons.NeuClearException;
-import org.neuclear.commons.crypto.passphraseagents.AgentMessages;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.signers.PersonalSigner;
 import org.neuclear.commons.swing.LongChildProcess;
+import org.neuclear.commons.swing.Messages;
 import org.neuclear.commons.swing.ProcessDialog;
 import org.neuclear.id.Identity;
 import org.neuclear.id.builders.IdentityBuilder;
@@ -85,14 +85,14 @@ public class PublishAccountScreen extends ProcessDialog {
                     url.setText("http://pkyp.org/" + nickname.getText() + "/");
 //                    signit.setSelected(true);
                     signit.setEnabled(false);
-                    ok.setText(AgentMessages.getOK(id));
+                    ok.setText(Messages.getOK(id));
                 } else {
                     url.setEditable(true);
                     if (url.getText().startsWith("http://pkyp.org"))
                         url.setText("http://");
 //                    signit.setSelected(true);
                     signit.setEnabled(true);
-                    ok.setText(AgentMessages.getOK("saveid"));
+                    ok.setText(Messages.getOK("saveid"));
 
                 }
             }

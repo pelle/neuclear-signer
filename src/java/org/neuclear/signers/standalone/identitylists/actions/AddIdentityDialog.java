@@ -3,9 +3,9 @@ package org.neuclear.signers.standalone.identitylists.actions;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import org.neuclear.commons.crypto.passphraseagents.AgentMessages;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.swing.LongChildProcess;
+import org.neuclear.commons.swing.Messages;
 import org.neuclear.commons.swing.ProcessDialog;
 import org.neuclear.id.Identity;
 import org.neuclear.id.InvalidNamedObjectException;
@@ -72,11 +72,11 @@ public class AddIdentityDialog extends ProcessDialog {
         builder.setDefaultDialogBorder();
         url = new JTextField();
 
-        builder.addLabel(AgentMessages.getTitle(id + ".url"), cc.xy(1, 1)).setLabelFor(url);
+        builder.addLabel(Messages.getTitle(id + ".url"), cc.xy(1, 1)).setLabelFor(url);
         builder.add(url, cc.xy(3, 1));
         categories = new JComboBox();
         categories.setEditable(true);
-        builder.addLabel(AgentMessages.getTitle(id + ".categories"), cc.xy(1, 3)).setLabelFor(categories);
+        builder.addLabel(Messages.getTitle(id + ".categories"), cc.xy(1, 3)).setLabelFor(categories);
         builder.add(categories, cc.xy(3, 3));
 
         return builder.getPanel();

@@ -11,10 +11,10 @@ import org.neuclear.asset.orders.TransferOrder;
 import org.neuclear.asset.orders.TransferReceipt;
 import org.neuclear.asset.orders.builders.TransferOrderBuilder;
 import org.neuclear.commons.NeuClearException;
-import org.neuclear.commons.crypto.passphraseagents.AgentMessages;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.signers.BrowsableSigner;
 import org.neuclear.commons.swing.LongChildProcess;
+import org.neuclear.commons.swing.Messages;
 import org.neuclear.commons.swing.ProcessDialog;
 import org.neuclear.id.InvalidNamedObjectException;
 import org.neuclear.id.NameResolutionException;
@@ -109,14 +109,14 @@ public class TransferScreen extends ProcessDialog {
         contacts = new IdentityComboBox();
 
         builder.setDefaultDialogBorder();
-        builder.addLabel(AgentMessages.getText("asset"), cc.xy(1, 1)).setLabelFor(assets);
+        builder.addLabel(Messages.getText("asset"), cc.xy(1, 1)).setLabelFor(assets);
         builder.add(assets, cc.xyw(3, 1, 3));
-        builder.addLabel(AgentMessages.getText("payee"), cc.xy(1, 3)).setLabelFor(contacts);
+        builder.addLabel(Messages.getText("payee"), cc.xy(1, 3)).setLabelFor(contacts);
         builder.add(contacts, cc.xyw(3, 3, 3));
-        builder.addLabel(AgentMessages.getText("amount"), cc.xy(1, 5)).setLabelFor(amount);
+        builder.addLabel(Messages.getText("amount"), cc.xy(1, 5)).setLabelFor(amount);
         builder.add(amount, cc.xy(3, 5));
         units = builder.addLabel("units", cc.xy(5, 5));
-        builder.addLabel(AgentMessages.getText("comment"), cc.xyw(1, 7, 5)).setLabelFor(comment);
+        builder.addLabel(Messages.getText("comment"), cc.xyw(1, 7, 5)).setLabelFor(comment);
         builder.add(comment, cc.xyw(1, 9, 5));
         return builder.getPanel();
     }
@@ -142,8 +142,8 @@ public class TransferScreen extends ProcessDialog {
                     System.out.println("Sending");
                     processInfo("Sending Transfer Order to " + asset.getServiceUrl());
                     TransferReceipt receipt = (TransferReceipt) asset.service(order);
-                    processInfo("Transfer was succesfull receipt: " + receipt.getDigest());
-                    parent.info("Transfer was succesfull receipt: " + receipt.getDigest());
+                    processInfo("Transfer was succesful receipt: " + receipt.getDigest());
+                    parent.info("Transfer was succesful receipt: " + receipt.getDigest());
                     setResult(receipt);
                 } catch (InvalidTransferException e) {
                     e.printStackTrace();

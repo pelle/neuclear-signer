@@ -9,12 +9,12 @@ import org.masukomi.aspirin.core.MailQue;
 import org.masukomi.aspirin.core.MailWatcher;
 import org.neuclear.asset.contracts.AssetGlobals;
 import org.neuclear.commons.crypto.CryptoTools;
-import org.neuclear.commons.crypto.passphraseagents.AgentMessages;
 import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.commons.crypto.passphraseagents.swing.KeyStorePanel;
 import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.PersonalSigner;
+import org.neuclear.commons.swing.Messages;
 import org.neuclear.signers.standalone.identitylists.AssetPanel;
 import org.neuclear.signers.standalone.identitylists.IdentityPanel;
 import org.neuclear.signers.standalone.identitylists.actions.AddIdentityAction;
@@ -112,7 +112,7 @@ public class MainFrame extends JFrame {
         ksPane.getList().setTransferHandler(new PublicKeyTransferHandler(signer));
         ksPane.getList().setDragEnabled(true);
 
-        tabbed.addTab(AgentMessages.getText("identities"), IconTools.getPersonalities(), ksPane);
+        tabbed.addTab(Messages.getText("identities"), IconTools.getPersonalities(), ksPane);
         final JPanel contacts = new JPanel();
         contacts.setLayout(new BorderLayout());
         final IdentityPanel contactsPanel = new IdentityPanel(this);
@@ -127,12 +127,12 @@ public class MainFrame extends JFrame {
                 addId = (AddIdentityAction) action;
         }
 
-        tabbed.addTab(AgentMessages.getText("contacts"), ICON_CONTACTS, contacts);
+        tabbed.addTab(Messages.getText("contacts"), ICON_CONTACTS, contacts);
         final JPanel assets = new JPanel();
         assets.setLayout(new BorderLayout());
         final AssetPanel assetPanel = new AssetPanel(this);
         assets.add(assetPanel, BorderLayout.CENTER);
-        tabbed.addTab(AgentMessages.getText("assets"), ICON_ASSETS, assets);
+        tabbed.addTab(Messages.getText("assets"), ICON_ASSETS, assets);
         actions = assetPanel.getActions();
         AddIdentityAction addAsset = null;
         for (int i = 0; i < actions.length; i++) {
