@@ -212,7 +212,7 @@
         <dependency>
             <groupId>aspirin</groupId>
             <artifactId>aspirin</artifactId>
-            <version>0.6</version>
+            <version>0.6.6</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
@@ -220,15 +220,7 @@
         <dependency>
             <groupId>dnsjava</groupId>
             <artifactId>dnsjava</artifactId>
-            <version>1.2.3</version>
-            <properties>
-                <jnlp.jar>true</jnlp.jar>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>jdom</groupId>
-            <artifactId>jdom</artifactId>
-            <version>b10</version>
+            <version>1.6.4</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
