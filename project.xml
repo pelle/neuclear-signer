@@ -16,7 +16,7 @@
 	Standalone Signing web app for NeuClear
     </description>
 
-    <url>http://old.neuclear.org/signer/</url>
+    <url>http://dev.neuclear.org/signer/</url>
     <repository>
         <connection>
          scm:cvs:pserver:anonymous@cvs.neuclear.sourceforge.net:/cvsroot/neuclear:neuclear-signer
@@ -26,7 +26,7 @@
         </url>
     </repository>
 
-    <siteAddress>old.neuclear.org</siteAddress>
+    <siteAddress>dev.neuclear.org</siteAddress>
     <siteDirectory>/home/sites/neuclear.org/public_html/signer/</siteDirectory>
     <issueTrackingUrl>http://jira.neuclear.org/</issueTrackingUrl>
     <mailingLists>
