@@ -130,14 +130,20 @@ public class TransferScreen extends ProcessDialog {
         openAndWait(new LongChildProcess() {
             public void run() {
                 try {
+
                     final Asset asset = (Asset) ((IdentityNode) assets.getSelectedItem()).getIdentity();
+                    processInfo("Creating Transfer Order");
                     Builder builder = new TransferOrderBuilder(asset,
                             ((IdentityNode) contacts.getSelectedItem()).getIdentity().getSignatory(),
                             new Amount(Double.parseDouble(amount.getText())),
                             comment.getText());
+                    processInfo("Signing Transfer Order");
                     TransferOrder order = (TransferOrder) builder.convert(signer);
                     System.out.println("Sending");
+                    processInfo("Sending Transfer Order to " + asset.getServiceUrl());
                     TransferReceipt receipt = (TransferReceipt) asset.service(order);
+                    processInfo("Transfer was succesfull receipt: " + receipt.getDigest());
+                    parent.info("Transfer was succesfull receipt: " + receipt.getDigest());
                     setResult(receipt);
                 } catch (InvalidTransferException e) {
                     e.printStackTrace();

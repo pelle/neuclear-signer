@@ -115,19 +115,24 @@ public class PublishAccountScreen extends ProcessDialog {
         openAndWait(new LongChildProcess() {
             public void run() {
                 try {
-
+                    processInfo("Creating Page");
                     builder = new IdentityBuilder(nickname.getText(), url.getText(), "http://portfolio.neuclear.org/Receive", whoami.getText());
                     builder.addImage("image", imageurl.getText());
                     builder.addWebLink("blog", "My Blog", blog.getText());
                     builder.addEmail("email", "Email", email.getText());
-                    builder.addWebLink("website", "My Blog", website.getText());
+                    builder.addWebLink("website", "My Website", website.getText());
                     builder.addBlock("where", "Where am I?", where.getText());
                     builder.addBlock("more", "More about me", more.getText());
                     builder.addAddContactLink();
+                    processInfo("Signing Page");
                     Identity id = (Identity) builder.convert(signer);
+                    processInfo("Sending Page to: " + ENDPOINT);
                     System.out.println("Sending");
-                    Sender.quickSend("http://pkyp.org/Post", id);
+                    Sender.quickSend(ENDPOINT, id);
+                    processInfo("Sent Account page to " + url.getText());
+                    parent.info("Sent Account page to " + url.getText());
                     setResult(id);
+
                 } catch (NeuClearException e) {
                     e.printStackTrace();
                     parent.error("Server Error");
@@ -153,4 +158,5 @@ public class PublishAccountScreen extends ProcessDialog {
     private IdentityBuilder builder;
     private JComboBox server;
     private IdentityPanel contacts;
+    public static final String ENDPOINT = "http://pkyp.org/Post";
 }
