@@ -2,6 +2,7 @@ package org.neuclear.signers.standalone;
 
 import com.jgoodies.plaf.Options;
 import org.dom4j.Document;
+import org.dom4j.io.DOMReader;
 import org.mortbay.http.HttpContext;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHandler;
@@ -9,22 +10,26 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.util.InetAddrPort;
 import org.neuclear.commons.crypto.CryptoTools;
 import org.neuclear.commons.crypto.passphraseagents.PassPhraseAgent;
-import org.neuclear.commons.crypto.passphraseagents.UserCancellationException;
 import org.neuclear.commons.crypto.passphraseagents.swing.MessageLabel;
 import org.neuclear.commons.crypto.signers.BrowsableSigner;
 import org.neuclear.commons.crypto.signers.DefaultSigner;
-import org.neuclear.xml.XMLException;
 import org.neuclear.xml.XMLTools;
 import org.neuclear.xml.xmlsec.EnvelopedSignature;
 import org.neuclear.xml.xmlsec.XMLSignature;
+import org.w3c.tidy.Tidy;
 
+import javax.jnlp.BasicService;
+import javax.jnlp.ServiceManager;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 
 
@@ -145,11 +150,54 @@ public class StandaloneSigner {
             }
 
         });
+
+        JMenu help = new JMenu("Help");
+        help.setMnemonic(KeyEvent.VK_H);
+        menubar.add(help);
+
+        help.add(createWebMenuItem("NeuClear Site", "http://neuclear.org", message));
+        help.add(createWebMenuItem("The Two-Minute NeuClear Tour", "http://neuclear.org/display/neu/The+Two-Minute+NeuClear+Tour", message));
+        help.addSeparator();
+        help.add(createWebMenuItem("Road Map", "http://jira.neuclear.org/secure/BrowseProject.jspa?id=10030&report=roadmap", message));
+        help.add(createWebMenuItem("Report Bug or Suggest Feature", "http://jira.neuclear.org/secure/CreateIssue!default.jspa", message));
+        help.addSeparator();
+        JMenuItem about = new JMenuItem("About");
+        about.setMnemonic(KeyEvent.VK_A);
+        help.add(about);
+        about.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                new SplashWindow(frame, Toolkit.getDefaultToolkit().createImage(QuickStart.class.getClassLoader().getResource("neuclearsplash.png"))).show();
+            }
+
+        });
         frame.pack();
         frame.show();
 
         return frame;
 
+    }
+
+    private static JMenuItem createWebMenuItem(final String title, final String url, final MessageLabel message) {
+        final JMenuItem item = new JMenuItem(title);
+        item.addActionListener(new ActionListener() {
+            /**
+             * Invoked when an action occurs.
+             */
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    BasicService bs = (BasicService) ServiceManager.lookup("javax.jnlp.BasicService");
+                    // Invoke the showDocument method
+                    bs.showDocument(new URL(url));
+                } catch (Exception e1) {
+                    message.error(e1);
+                }
+            }
+
+        });
+        return item;
     }
 
     public static class SignDocument implements Runnable {
@@ -171,7 +219,17 @@ public class StandaloneSigner {
             }
             try {
                 message.info("Parsing " + chooser.getSelectedFile().getName());
-                Document doc = XMLTools.loadDocument(chooser.getSelectedFile());
+                final File file = chooser.getSelectedFile();
+                Document doc;
+                if (file.getName().endsWith(".html") || file.getName().endsWith(".html")) {
+                    Tidy tidy = new Tidy();
+                    tidy.setXmlOut(true);
+                    InputStream is = new BufferedInputStream(new FileInputStream(file));
+                    org.w3c.dom.Document dom = tidy.parseDOM(is, null);
+                    DOMReader reader = new DOMReader();
+                    doc = reader.read(dom);
+                } else
+                    doc = XMLTools.loadDocument(file);
                 message.info("Signing " + chooser.getSelectedFile().getName());
                 XMLSignature sig = new EnvelopedSignature(signer, doc.getRootElement());
                 chooser.setDialogTitle("Save signed XML Document");
@@ -186,10 +244,7 @@ public class StandaloneSigner {
                 message.info("Saved signed XML document " + chooser.getSelectedFile().getName());
                 frame.setEnabled(true);
 
-            } catch (XMLException e) {
-                frame.setEnabled(true);
-                message.error(e);
-            } catch (UserCancellationException e) {
+            } catch (Exception e) {
                 frame.setEnabled(true);
                 message.error(e);
             }
@@ -200,6 +255,7 @@ public class StandaloneSigner {
         private final JFileChooser chooser;
         private final JFrame frame;
         private final MessageLabel message;
+        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.8 2004/04/15 23:58:54 pelle Exp $";
 
     }
 }

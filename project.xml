@@ -109,7 +109,7 @@
             <id>bouncycastle</id>
             <name>bouncycastle</name>
             <version>120</version>
-            <jar>bcprov-jdk14-120.jar</jar>
+            <jar>bcprov-jdk14-120-nosig.jar</jar>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
                 <war.bundle>false</war.bundle>
@@ -123,6 +123,22 @@
                 <jnlp.jar>true</jnlp.jar>
             </properties>
         </dependency>
+        <dependency>
+            <id>jtidy</id>
+            <name>jtidy</name>
+            <version>r7</version>
+            <jar>jtidy-4aug2000r7-dev.jar</jar>
+            <properties>
+                <jnlp.jar>true</jnlp.jar>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
+        <dependency>
+            <groupId>jnlp</groupId>
+            <artifactId>jnlp</artifactId>
+            <version>1.2</version>
+        </dependency>
+
         <!--        <dependency>
                     <id>waterken-adt</id>
                     <version>2.0-beta13</version>
