@@ -5,6 +5,8 @@ import com.l2fprod.common.swing.JTaskPane;
 import com.l2fprod.common.swing.JTaskPaneGroup;
 import com.l2fprod.common.swing.StatusBar;
 import com.l2fprod.common.util.OS;
+import org.masukomi.aspirin.core.MailQue;
+import org.masukomi.aspirin.core.MailWatcher;
 import org.neuclear.asset.contracts.AssetGlobals;
 import org.neuclear.commons.crypto.CryptoTools;
 import org.neuclear.commons.crypto.passphraseagents.AgentMessages;
@@ -19,12 +21,15 @@ import org.neuclear.signers.standalone.signingscreens.TransferAction;
 
 import javax.jnlp.BasicService;
 import javax.jnlp.ServiceManager;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.net.URL;
+import java.util.Collection;
 
 /*
  *  The NeuClear Project and it's libraries are
@@ -57,7 +62,7 @@ public class MainFrame extends JFrame {
 
             if (OS.isMacOSX()) {
                 System.setProperty("com.apple.macos.useScreenMenuBar", "true");
-                System.setProperty("com.apple.mrj.application.apple.menu.about.name", "NeuClear Personal Signer");
+                System.setProperty("com.apple.mrj.application.apple.menu.about.name", "NeuClear Personal Trader");
             } else if (OS.isWindows2003() || OS.isWindowsXP()) {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } else {
@@ -67,7 +72,7 @@ public class MainFrame extends JFrame {
         } catch (Exception e) {
             // Likely PlasticXP is not in the class path; ignore.
         }
-        setTitle("NeuClear Personal Signer");
+        setTitle("NeuClear Personal Trader");
         AssetGlobals.registerReaders();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setIconImage(IconTools.getLogo().getImage());
@@ -134,7 +139,7 @@ public class MainFrame extends JFrame {
 
         StatusBar status = new StatusBar();
 
-        MessageLabel message = new MessageLabel();
+        message = new MessageLabel();
         status.addZone("messages", message, "90%");
         content.add(status, BorderLayout.SOUTH);
 
@@ -190,7 +195,26 @@ public class MainFrame extends JFrame {
         JMenuItem about = new JMenuItem("About");
         about.setMnemonic(KeyEvent.VK_A);
         helpmenu.add(about);
-        final Frame frame = this;
+        final MainFrame frame = this;
+
+        MailQue.addListener(new MailWatcher() {
+            public void deliverySuccess(MimeMessage message, Collection recepients) {
+                try {
+                    frame.message.info("Message: " + message.getSubject() + " sent successfully");
+                } catch (MessagingException e) {
+                    frame.message.error(e);
+                }
+            }
+
+            public void deliveryFailure(MimeMessage message, Collection recepients) {
+                try {
+                    frame.message.error("Message: " + message.getSubject() + " could not be sent");
+                } catch (MessagingException e) {
+                    frame.message.error(e);
+                }
+
+            }
+        });
         about.addActionListener(new ActionListener() {
 
             /**
@@ -215,7 +239,7 @@ public class MainFrame extends JFrame {
             try {
                 signer.open();
             } catch (UserCancellationException e) {
-                int choice = JOptionPane.showOptionDialog(this, "You need to open a Personalities File to start NeuClear Trader.",
+                int choice = JOptionPane.showOptionDialog(this, "You need to open or create an accounts file to start NeuClear Trader.",
                         "Really Quit", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, QUIT_OPTIONS, QUIT_OPTIONS[1]);
                 if (choice == JOptionPane.NO_OPTION) // Yeah I know it doesnt make sense
                     System.exit(0);
@@ -228,7 +252,7 @@ public class MainFrame extends JFrame {
 
     private void placeWindow() {
         Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(300, (screenDim.getHeight() < 400 ? (int) screenDim.getHeight() : 400));
+        setSize(400, (screenDim.getHeight() < 500 ? (int) screenDim.getHeight() : 500));
         setLocation((screenDim.width - getWidth() - 10),
                 (screenDim.height - getHeight()) - 25);
     }
@@ -267,4 +291,5 @@ public class MainFrame extends JFrame {
     public static final Icon ICON_CONTACTS = IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/contacts.png");
     public static final Icon ICON_ASSETS = IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/assets.png");
     public static final String[] QUIT_OPTIONS = new String[]{"Try again", "Quit"};
+    private MessageLabel message;
 }
