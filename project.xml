@@ -63,7 +63,7 @@
         <dependency>
             <id>neuclear-xmlsig</id>
             <name>neuclear-xmlsig</name>
-            <version>0.11</version>
+            <version>0.11.1-SNAPSHOT</version>
             <properties>
                 <war.bundle>true</war.bundle>
             </properties>
