@@ -89,7 +89,7 @@ public class MainFrame extends JFrame {
 
         JTaskPaneGroup assetTasks = new JTaskPaneGroup();
         assetTasks.setIcon(ICON_ASSETS);
-        assetTasks.setText("Tasks related top your Assets");
+        assetTasks.setText("Tasks related to your Assets");
         assetTasks.setEnabled(true);
         taskpane.add(assetTasks);
         JTaskPaneGroup contactTasks = new JTaskPaneGroup();
