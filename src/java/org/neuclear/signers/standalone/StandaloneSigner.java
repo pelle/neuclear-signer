@@ -160,6 +160,11 @@ public class StandaloneSigner {
 
         });
 
+        JMenu assets = new JMenu("Assets");
+        assets.setMnemonic(KeyEvent.VK_A);
+        menubar.add(assets);
+        assets.add(createWebMenuItem("NeuClear Bux", "http://bux.neuclear.org", message));
+
         JMenu help = new JMenu("Help");
         help.setMnemonic(KeyEvent.VK_H);
         menubar.add(help);
@@ -277,7 +282,7 @@ public class StandaloneSigner {
         private final JFileChooser chooser;
         private final JFrame frame;
         private final MessageLabel message;
-        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.13 2004/04/22 23:59:36 pelle Exp $";
+        private final static String CVSID = "$Id: StandaloneSigner.java,v 1.14 2004/04/29 19:21:44 pelle Exp $";
 
     }
 }

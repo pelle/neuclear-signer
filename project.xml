@@ -3,7 +3,7 @@
 
     <name>NeuClear Identity Personal Signer</name>
     <id>neuclear-signer</id>
-    <currentVersion>0.9</currentVersion>
+    <currentVersion>0.9.1</currentVersion>
     <inceptionYear>2003</inceptionYear>
     <package>org.neuclear.signers.standalone</package>
     <logo>/images/logo.gif</logo>
@@ -79,7 +79,7 @@
         <dependency>
             <id>neuclear-commons</id>
             <name>neuclear-commons</name>
-            <version>0.7</version>
+            <version>0.7.1</version>
             <properties>
                 <jnlp.jar>true</jnlp.jar>
             </properties>
