@@ -75,7 +75,7 @@ public class MainFrame extends JFrame {
             // Likely PlasticXP is not in the class path; ignore.
         }
         Messages.updateLocale("es");
-        setTitle("NeuClear Personal Trader");
+        setTitle(Messages.getText("personalsigner"));
         AssetGlobals.registerReaders();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setIconImage(IconTools.getLogo().getImage());
@@ -86,24 +86,24 @@ public class MainFrame extends JFrame {
 
         JTaskPaneGroup personalityTasks = new JTaskPaneGroup();
         personalityTasks.setIcon(IconTools.getPersonalities());
-        personalityTasks.setText("Account related tasks");
+        personalityTasks.setText(Messages.getText("tasks.accounts"));
         personalityTasks.setEnabled(true);
         taskpane.add(personalityTasks);
 
         JTaskPaneGroup assetTasks = new JTaskPaneGroup();
         assetTasks.setIcon(ICON_ASSETS);
-        assetTasks.setText("Tasks related to your Assets");
+        assetTasks.setText(Messages.getText("tasks.assets"));
         assetTasks.setEnabled(true);
         taskpane.add(assetTasks);
         JTaskPaneGroup contactTasks = new JTaskPaneGroup();
         contactTasks.setIcon(ICON_CONTACTS);
-        contactTasks.setText("Tasks related to your contacts");
+        contactTasks.setText(Messages.getText("tasks.contacts"));
         contactTasks.setEnabled(true);
         taskpane.add(contactTasks);
 
         JTabbedPane tabbed = new JTabbedPane();
         content.add(tabbed, BorderLayout.CENTER);
-        tabbed.addTab("Start here", IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/starthere.png"), taskpane);
+        tabbed.addTab(Messages.getText("starthere"), IconTools.loadIcon(MainFrame.class, "org/neuclear/signers/standalone/icons/starthere.png"), taskpane);
         final KeyStorePanel ksPane = new KeyStorePanel(signer);
         Action actions[] = ksPane.getActions();
         for (int i = 0; i < actions.length; i++) {
@@ -145,7 +145,7 @@ public class MainFrame extends JFrame {
 
         JTaskPaneGroup signingTasks = new JTaskPaneGroup();
         signingTasks.setIcon(IconTools.getSign());
-        signingTasks.setText("Signing tasks");
+        signingTasks.setText(Messages.getText("tasks.signing"));
         signingTasks.setEnabled(true);
         taskpane.add(signingTasks);
 
@@ -158,7 +158,7 @@ public class MainFrame extends JFrame {
         JMenuBar menubar = new JMenuBar();
         setJMenuBar(menubar);
 
-        JMenu menu = new JMenu("File");
+        JMenu menu = new JMenu(Messages.getText("file"));
         menu.setMnemonic(KeyEvent.VK_F);
         menubar.add(menu);
         Action[] fileactions = ksPane.getFileActions();
@@ -180,7 +180,7 @@ public class MainFrame extends JFrame {
 
 
         menu.addSeparator();
-        JMenuItem quitItem = new JMenuItem("Exit",
+        JMenuItem quitItem = new JMenuItem(Messages.getText("exit"),
                 KeyEvent.VK_X);
         menu.add(quitItem);
 
@@ -195,14 +195,14 @@ public class MainFrame extends JFrame {
             }
 
         });
-        JMenu directory = new JMenu("Directory");
+        JMenu directory = new JMenu(Messages.getText("directory"));
         directory.setMnemonic(KeyEvent.VK_D);
-        directory.add(createWebMenuItem("Search Yellow Pages", "http://pkyp.org", message));
+        directory.add(createWebMenuItem(Messages.getText("searchyp"), "http://pkyp.org", message));
 //        directory.add(createWebMenuItem("Submit Page to Yellow Pages", "http://pkyp.org/submit.jsp", message));
 
         menubar.add(directory);
 
-        helpmenu = new JMenu("Help");
+        helpmenu = new JMenu(Messages.getText("help"));
         helpmenu.setMnemonic(KeyEvent.VK_H);
         menubar.add(helpmenu);
 
@@ -262,8 +262,8 @@ public class MainFrame extends JFrame {
             try {
                 signer.open();
             } catch (UserCancellationException e) {
-                int choice = JOptionPane.showOptionDialog(this, "You need to open or create an accounts file to start NeuClear Trader.",
-                        "Really Quit", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, QUIT_OPTIONS, QUIT_OPTIONS[1]);
+                int choice = JOptionPane.showOptionDialog(this, Messages.getText("accountsrequired"),
+                        Messages.getText("reallyquit"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, QUIT_OPTIONS, QUIT_OPTIONS[1]);
                 if (choice == JOptionPane.NO_OPTION) // Yeah I know it doesnt make sense
                     System.exit(0);
 
