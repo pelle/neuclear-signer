@@ -41,6 +41,9 @@ public class StandaloneSigningServlet extends SigningServlet {
         super.service(request, response);
     }
 */
+    public BrowsableSigner getSigner() {
+        return super.getSigner();
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
@@ -48,6 +51,7 @@ public class StandaloneSigningServlet extends SigningServlet {
         ServletTools.printHeader(writer, request, "NeuClear Signing Servlet");
 
     }
+
 
     private final InteractiveAgent agent;
 

@@ -24,7 +24,7 @@ public class QuickStart {
             System.exit(10);
         }
         try {
-            Thread.sleep(4000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
