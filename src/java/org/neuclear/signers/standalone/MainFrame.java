@@ -5,6 +5,7 @@ import com.l2fprod.common.swing.JTaskPane;
 import com.l2fprod.common.swing.JTaskPaneGroup;
 import com.l2fprod.common.swing.StatusBar;
 import com.l2fprod.common.util.OS;
+import org.apache.mailet.MailAddress;
 import org.masukomi.aspirin.core.MailQue;
 import org.masukomi.aspirin.core.MailWatcher;
 import org.neuclear.asset.contracts.AssetGlobals;
@@ -238,7 +239,7 @@ public class MainFrame extends JFrame {
         helpmenu.add(about);
         final MainFrame frame = this;
 
-        MailQue.addListener(new MailWatcher() {
+        MailQue.addWatcher(new MailWatcher() {
             public void deliverySuccess(MimeMessage message, Collection recepients) {
                 try {
                     frame.message.info("Message: " + message.getSubject() + " sent successfully");
@@ -250,6 +251,24 @@ public class MainFrame extends JFrame {
             public void deliveryFailure(MimeMessage message, Collection recepients) {
                 try {
                     frame.message.error("Message: " + message.getSubject() + " could not be sent");
+                } catch (MessagingException e) {
+                    frame.message.error(e);
+                }
+
+            }
+
+            public void deliverySuccess(MimeMessage message, MailAddress recipient) {
+                try {
+                    frame.message.info("Message: " + message.getSubject() + " sent successfully  to " + recipient.toString());
+                } catch (MessagingException e) {
+                    frame.message.error(e);
+                }
+
+            }
+
+            public void deliveryFailure(MimeMessage message, MailAddress recipient) {
+                try {
+                    frame.message.error("Message: " + message.getSubject() + " could not be sent  to " + recipient.toString());
                 } catch (MessagingException e) {
                     frame.message.error(e);
                 }
