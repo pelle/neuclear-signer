@@ -22,6 +22,7 @@ package org.neuclear.signers.standalone.identitylists.actions;
 
 import org.neuclear.commons.crypto.passphraseagents.icons.IconTools;
 import org.neuclear.commons.crypto.passphraseagents.swing.actions.NeuClearAction;
+import org.neuclear.commons.swing.Messages;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -46,7 +47,7 @@ public class RemoveIdentityAction extends NeuClearAction implements TreeSelectio
         super(name, icon);
         this.tree = tree;
         this.frame = frame;
-        putValue(SHORT_DESCRIPTION, caps.getString(name));
+        putValue(SHORT_DESCRIPTION, Messages.getText(name));
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_A));
         this.setEnabled(!tree.isSelectionEmpty());
         tree.addTreeSelectionListener(this);

@@ -74,6 +74,7 @@ public class MainFrame extends JFrame {
         } catch (Exception e) {
             // Likely PlasticXP is not in the class path; ignore.
         }
+        Messages.updateLocale("es");
         setTitle("NeuClear Personal Trader");
         AssetGlobals.registerReaders();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
